@@ -1,17 +1,14 @@
 
 
-TEMP_LINK_PATH_TO_BW_BMC_USB_LIB="../../../bw_bmc_usb_lib/"
+TEMP_LINK_PATH_TO_BW_BMC_USB_LIB="/usr/share/bittware/520nmx/cots/bw_bmc_usb_lib/"
 
-TEMP_LINK_PATH_TO_BW_MCTP_PLDM_LIB="../../../bw_mctp_pldm_lib/"
+TEMP_LINK_PATH_TO_BW_MCTP_PLDM_LIB="/usr/share/bittware/520nmx/cots/bw_mctp_pldm_lib/"
 
 BIN_FILE="../bin/monitor"
 
 all: $(BIN_FILE)
-
-
 monitor.o: monitor.c
 	gcc -c monitor.c -o monitor.o
-
 
 $(BIN_FILE): monitor.o
 	mkdir ../bin -p
