@@ -70,7 +70,15 @@ SML::SML(int32_t period){
     time_period = period;
     initialize_sublibraries();
     current_state = HardwareCounters(0.0);
-    monitor_thread = std::thread(read_hardware_counters);
+    //monitor_thread = std::thread(read_hardware_counters);
+
+    monitor_thread = std::thread([read_hardware_counters]() {
+        while (true) {
+            read_hardware_counters();
+            std::this_thread::sleep_for(std::chrono::milliseconds(time_period));
+        }
+    });
+    monitor_thread.detach();
 }
 
 SML * SML::getInstance(int32_t period = 100) {
@@ -124,7 +132,6 @@ void SML::read_hardware_counters(){
 
     auto last_value_counters = HardwareCounters(energy);
     current_state = current_state + last_value_counters;
-    std::this_thread::sleep_for(std::chrono::milliseconds(time_period));
 }
 
 #endif //STRATIXMONITORLIB_STRATIX_MONITOR_H
