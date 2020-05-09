@@ -49,7 +49,7 @@ private:
     usb_dev_handle* usbHandle = NULL;
     BW_MCTP_PLDM_HANDLE mctpPldmHandle;
     static SML * instance;
-    std::mutex mutex;
+    std::mutex my_mutex;
     std::thread monitor_thread;
     int32_t time_period;                          // in milliseconds
     HardwareCounters current_state;
@@ -66,7 +66,7 @@ public:
     HardwareCounters get_hardware_counters();
 };
 
-SML * SML::instance = nullptr;
+static SML * SML::instance = nullptr;
 
 
 SML::SML(int32_t period){
@@ -79,12 +79,12 @@ SML::SML(int32_t period){
     monitor_thread.detach();
 }
 
-SML * SML::getInstance(int32_t period) {
+static SML * SML::getInstance(int32_t period) {
     if (instance) return instance;              // no lock here
 
-    mutex.lock();
+    my_mutex.lock();
     if (!instance) instance = new SML(period);
-    mutex.unlock();
+    my_mutex.unlock();
 
     return instance;
 }
