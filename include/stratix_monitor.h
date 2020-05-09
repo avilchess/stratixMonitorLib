@@ -45,7 +45,7 @@ private:
     // Fields
     usb_dev_handle* usbHandle = NULL;
     BW_MCTP_PLDM_HANDLE mctpPldmHandle;
-    static  SML * instance = NULL;
+    SML * instance = NULL;
     std::mutex mutex;
     std::thread monitor_thread;
     float time_period;                          // in milliseconds
