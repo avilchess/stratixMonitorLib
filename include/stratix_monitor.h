@@ -75,12 +75,7 @@ SML::SML(int32_t period){
     current_state = HardwareCounters(0.0);
     //monitor_thread = std::thread(read_hardware_counters);
 
-    monitor_thread = std::thread([read_hardware_counters]() {
-        while (true) {
-            read_hardware_counters();
-            std::this_thread::sleep_for(std::chrono::milliseconds(time_period));
-        }
-    });
+    monitor_thread = std::thread(&SML::read_hardware_counters, this)
     monitor_thread.detach();
 }
 
@@ -125,16 +120,19 @@ int8_t SML::bmcUsbReadFunction(uint8_t* buffer, uint16_t* length) {
 }
 
 void SML::read_hardware_counters(){
-    float power;
-    uint16_t sensorId = 1;
-    BwMctpPldm_getNumericSensorReadingById(mctpPldmHandle, &power, sensorId);
 
-    // Integrate power in time to get energy in joules
-    float time = (time_period / 1000.0f);
-    float energy = power * time;
+    while (true) {
+        float power;
+        uint16_t sensorId = 1;
+        BwMctpPldm_getNumericSensorReadingById(mctpPldmHandle, &power, sensorId);
 
-    auto last_value_counters = HardwareCounters(energy);
-    current_state = current_state + last_value_counters;
+        // Integrate power in time to get energy in joules
+        float time = (time_period / 1000.0f);
+        float energy = power * time;
+
+        auto last_value_counters = HardwareCounters(energy);
+        current_state = current_state + last_value_counters;            std::this_thread::sleep_for(std::chrono::milliseconds(time_period));
+    }
 }
 
 #endif //STRATIXMONITORLIB_STRATIX_MONITOR_H
