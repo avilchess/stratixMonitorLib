@@ -15,7 +15,7 @@
 #include <vector>
 
 int8_t bmcUsbWriteFunction(uint8_t* buffer, uint16_t* length) {
-    int writeResult = bw_bmc_usb_write(usbHandle, buffer, *length);
+    int writeResult = bw_bmc_usb_write(SML::usbHandle, buffer, *length);
     if (writeResult == *length)
         return 0;
     return -1;
@@ -23,7 +23,7 @@ int8_t bmcUsbWriteFunction(uint8_t* buffer, uint16_t* length) {
 
 int8_t bmcUsbReadFunction(uint8_t* buffer, uint16_t* length) {
     int readResult;
-    readResult = bw_bmc_usb_read(usbHandle, buffer, 1000);
+    readResult = bw_bmc_usb_read(SML::usbHandle, buffer, 1000);
     *length = readResult;
     return 0;
 }
@@ -60,7 +60,6 @@ public:
 class SML{
 private:
     // Fields
-    usb_dev_handle* usbHandle = NULL;
     BW_MCTP_PLDM_HANDLE mctpPldmHandle;
     static SML * instance;
     std::mutex my_mutex;
@@ -74,11 +73,14 @@ private:
     void read_hardware_counters();
 
 public:
+    static sb_dev_handle* usbHandle;
     static SML * getInstance(int32_t period = 100);                   // the only way to get access
     HardwareCounters get_hardware_counters();
 };
 
 SML * SML::instance = nullptr;
+sb_dev_handle * SML::usbHandle = nullptr;
+
 
 
 SML::SML(int32_t period){
