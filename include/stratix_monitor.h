@@ -68,8 +68,7 @@ private:
     SML(float period);                     // forbidden to call directly because it is a singleton
     void initialize_sublibraries();
     void read_hardware_counters();
-    int8_t bmcUsbWriteFunction(uint8_t* buffer, uint16_t* length);
-    int8_t bmcUsbReadFunction(uint8_t* buffer, uint16_t* length);
+    
 public:
     static SML * getInstance(float period = 100);                   // the only way to get access
     HardwareCounters get_hardware_counters();
@@ -114,11 +113,11 @@ void SML::read_hardware_counters(){
     BwMctpPldm_getNumericSensorReadingById(mctpPldmHandle, &power, sensorId);
 
     // Integrate power in time to get energy in joules
-    float time = (period / 1000.0f);
+    float time = (time_period / 1000.0f);
     float energy = power * time;
 
     auto last_value_counters = HardwareCounters(energy);
-    current_state += lst_value_counters;
+    current_state += last_value_counters;
     std::this_thread::sleep_for(std::chrono::milliseconds(period));
 }
 
