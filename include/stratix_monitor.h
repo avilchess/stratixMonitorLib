@@ -14,6 +14,19 @@
 #include <chrono>
 #include <vector>
 
+int8_t bmcUsbWriteFunction(uint8_t* buffer, uint16_t* length) {
+    int writeResult = bw_bmc_usb_write(usbHandle, buffer, *length);
+    if (writeResult == *length)
+        return 0;
+    return -1;
+}
+
+int8_t bmcUsbReadFunction(uint8_t* buffer, uint16_t* length) {
+    int readResult;
+    readResult = bw_bmc_usb_read(usbHandle, buffer, 1000);
+    *length = readResult;
+    return 0;
+}
 
 class HardwareCounters {
 private:
@@ -52,17 +65,15 @@ private:
     HardwareCounters current_state;
 
     //Methods
-    SML(float time_period);                     // forbidden to call directly because it is a singleton
+    SML(float period);                     // forbidden to call directly because it is a singleton
     void initialize_sublibraries();
     void read_hardware_counters();
     int8_t bmcUsbWriteFunction(uint8_t* buffer, uint16_t* length);
     int8_t bmcUsbReadFunction(uint8_t* buffer, uint16_t* length);
 public:
-    static SML * getInstance();                   // the only way to get access
+    static SML * getInstance(float period = 100);                   // the only way to get access
     HardwareCounters get_hardware_counters();
 };
-
-//SML * SML::instance = NULL;
 
 SML::SML(float period){
     time_period = period;
@@ -81,20 +92,6 @@ SML * SML::getInstance(float period = 100) {
     return instance;
 }
 
-int8_t SML::bmcUsbWriteFunction(uint8_t* buffer, uint16_t* length) {
-    int writeResult = bw_bmc_usb_write(usbHandle, buffer, *length);
-    if (writeResult == *length)
-        return 0;
-    return -1;
-}
-
-int8_t SML::bmcUsbReadFunction(uint8_t* buffer, uint16_t* length) {
-    int readResult;
-    readResult = bw_bmc_usb_read(usbHandle, buffer, 1000);
-    *length = readResult;
-    return 0;
-}
-
 void SML::initialize_sublibraries() {
 
     // Get a USB connection to the BMC
@@ -105,7 +102,7 @@ void SML::initialize_sublibraries() {
     }
     //initialize BwMctpPldm library
     mctpPldmHandle = BwMctpPldm_initialise(bmcUsbWriteFunction, bmcUsbReadFunction);
-    if (!mctpPldmHandle L) {
+    if (!mctpPldmHandle) {
         std::cout << "Failed to initialise MCTP/PLDM Library!" << std::endl;
         exit(-1);
     }
