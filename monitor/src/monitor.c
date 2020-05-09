@@ -23,7 +23,6 @@ void displayNumericEffecter(BW_MCTP_PLDM_HANDLE mctpPldmHandle, uint16_t effecte
 void displayStateEffecter(BW_MCTP_PLDM_HANDLE mctpPldmHandle, uint16_t effecterId);
 
 
-
 /* Long names of valid command line options. */
 static struct option longOptions[] =
 {

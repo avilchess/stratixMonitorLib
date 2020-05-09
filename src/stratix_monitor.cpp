@@ -2,5 +2,122 @@
 // Created by Antonio Vilches on 07/05/2020.
 //
 
+/*#include "/usr/share/bittware/520nmx/cots/bw_bmc_usb_lib/bw_bmc_usb_lib.h"
+#include "/usr/share/bittware/520nmx/cots/bw_mctp_pldm_lib/bw_mctp_pldm_lib.h"
+#include <mutex>
+#include <thread>
 
+class HardwareCounters {
+private:
+    float total_energy;                         // in joules
+
+public:
+    HardwareCounters(float t_energy){
+        total_energy = t_energy;
+    };
+
+    HardwareCounters operator + (HardwareCounters const &obj) {
+        HardwareCounters res;
+        res.total_energy = total_energy + obj.total_energy;
+        return res;
+    }
+
+    HardwareCounters operator - (HardwareCounters const &obj) {
+        HardwareCounters res;
+        res.total_energy = total_energy - obj.total_energy;
+        return res;
+    }
+
+    std::vector<float> getHardwareCounters(){
+        std::vector<float> res;
+        res.push_back(total_energy);
+    };
+};
+
+
+
+class SML{
+private:
+    // Fields
+    usb_dev_handle* usbHandle = NULL;
+    BW_MCTP_PLDM_HANDLE mctpPldmHandle;
+    static * SML instance;
+    std::mutex mutex;
+    std::thread monitor_thread;
+    float time_period;                          // in milliseconds
+    HardwareCounters current_state;
+
+    //Methods
+    SML(float time_period);                     // forbidden to call directly because it is a singleton
+    void initialize_sublibraries();
+    void read_hardware_counters();
+    int8_t bmcUsbWriteFunction(uint8_t* buffer, uint16_t* length);
+    int8_t bmcUsbReadFunction(uint8_t* buffer, uint16_t* length);
+public:
+    static SML getInstance();                   // the only way to get access
+    harware_counters get_hardware_counters();
+};
+
+SML * SML::instance = NULL;
+
+SLM::SLM(float period){
+    time_period = period;
+    initialize_sublibraries();
+    current_state = HardwareCounters(0.0);
+    monitor_thread = std::thread(read_hardware_counters);
+}
+
+SML * SML::getInstance(float period = 100) {
+    if (instance) return instance;              // no lock here
+
+    std::lock(mutex);
+    if (!instance) instance = new SLM(period);
+    mutex.unlock();
+
+    return instance;
+}
+
+int8_t SML::bmcUsbWriteFunction(uint8_t* buffer, uint16_t* length) {
+    int writeResult = bw_bmc_usb_write(usbHandle, buffer, *length);
+    if (writeResult == *length)
+        return 0;
+    return -1;
+}
+
+int8_t SML::bmcUsbReadFunction(uint8_t* buffer, uint16_t* length) {
+    int readResult;
+    readResult = bw_bmc_usb_read(usbHandle, buffer, 1000);
+    *length = readResult;
+    return 0;
+}
+
+void SLM::initialize_sublibraries() {
+
+    // Get a USB connection to the BMC
+    usbHandle = bw_bmc_usb_open();
+    if (!usbHandle) {
+        std::cout << "Failed to open USB interface to BMC!" << std::endl;
+        exit(-1);
+    }
+    //initialize BwMctpPldm library
+    mctpPldmHandle = BwMctpPldm_initialise(bmcUsbWriteFunction, bmcUsbReadFunction);
+    if (!mctpPldmHandle L) {
+        std::cout << "Failed to initialise MCTP/PLDM Library!" << std::endl;
+        exit(-1);
+    }
+}
+
+void SLM::read_hardware_counters(){
+    float power;
+    uint16_t sensorId = 1;
+    BwMctpPldm_getNumericSensorReadingById(mctpPldmHandle, &power, sensorId);
+
+    // Integrate power in time to get energy in joules
+    float time = (period / 1000.0f);
+    float energy = power * time;
+
+    auto last_value_counters = HarwareCounters(energy);
+    current_state += lst_value_counters;
+    std::this_thread::sleep_for(std::chrono::milliseconds(period));
+}*/
 
