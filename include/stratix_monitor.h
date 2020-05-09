@@ -41,8 +41,6 @@ public:
     };
 };
 
-
-
 class SML{
 private:
     // Fields
@@ -67,7 +65,7 @@ public:
 
 SML * SML::instance = NULL;
 
-SLM::SLM(float period){
+SMM::SML(float period){
     time_period = period;
     initialize_sublibraries();
     current_state = HardwareCounters(0.0);
@@ -98,7 +96,7 @@ int8_t SML::bmcUsbReadFunction(uint8_t* buffer, uint16_t* length) {
     return 0;
 }
 
-void SLM::initialize_sublibraries() {
+void SML::initialize_sublibraries() {
 
     // Get a USB connection to the BMC
     usbHandle = bw_bmc_usb_open();
@@ -114,7 +112,7 @@ void SLM::initialize_sublibraries() {
     }
 }
 
-void SLM::read_hardware_counters(){
+void SML::read_hardware_counters(){
     float power;
     uint16_t sensorId = 1;
     BwMctpPldm_getNumericSensorReadingById(mctpPldmHandle, &power, sensorId);
@@ -123,7 +121,7 @@ void SLM::read_hardware_counters(){
     float time = (period / 1000.0f);
     float energy = power * time;
 
-    auto last_value_counters = HarwareCounters(energy);
+    auto last_value_counters = HardwareCounters(energy);
     current_state += lst_value_counters;
     std::this_thread::sleep_for(std::chrono::milliseconds(period));
 }
