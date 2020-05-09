@@ -33,6 +33,10 @@ private:
     float total_energy;                         // in joules
 
 public:
+    HardwareCounters(){
+        total_energy = 0.0;
+    };
+
     HardwareCounters(float t_energy){
         total_energy = t_energy;
     };
@@ -74,14 +78,14 @@ public:
     HardwareCounters get_hardware_counters();
 };
 
-SML::SML(float period){
+SML::SML(int32_t period){
     time_period = period;
     initialize_sublibraries();
     current_state = HardwareCounters(0.0);
     monitor_thread = std::thread(read_hardware_counters);
 }
 
-SML * SML::getInstance(int32_T period = 100) {
+SML * SML::getInstance(int32_t period = 100) {
     if (instance) return instance;              // no lock here
 
     std::lock(mutex);

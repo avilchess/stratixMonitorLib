@@ -11,7 +11,7 @@
 
 int main (int argc, char *argv[]) {
 
-    SML * sml = SML::getInstance();
+    SML * sml = SML::getInstance(100);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     auto counter1 = sml->get_hardware_counters();
