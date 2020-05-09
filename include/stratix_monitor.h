@@ -58,7 +58,7 @@ private:
     SML(int32_t period);                     // forbidden to call directly because it is a singleton
     void initialize_sublibraries();
     void read_hardware_counters();
-    char * bmcUsbWriteFunction(unsigned char* buffer, unsigned short int* length);
+    int8_t bmcUsbWriteFunction(uint8_t* buffer, uint16_t* length);
     int8_t bmcUsbReadFunction(uint8_t* buffer, uint16_t* length);
 
 public:
@@ -105,7 +105,7 @@ void SML::initialize_sublibraries() {
     }
 }
 
-char* bmcUsbWriteFunction(unsigned char* buffer, unsigned short int* length) {
+int8_t SML::bmcUsbWriteFunction(uint8_t* buffer, uint16_t* length) {
     int writeResult = bw_bmc_usb_write(usbHandle, buffer, *length);
     if (writeResult == *length)
         return 0;
