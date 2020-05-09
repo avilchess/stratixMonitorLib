@@ -69,7 +69,7 @@ private:
     HardwareCounters current_state;
 
     //Methods
-    SML(float period);                     // forbidden to call directly because it is a singleton
+    SML(int32_t period);                     // forbidden to call directly because it is a singleton
     void initialize_sublibraries();
     void read_hardware_counters();
 
@@ -88,8 +88,8 @@ SML::SML(int32_t period){
 SML * SML::getInstance(int32_t period = 100) {
     if (instance) return instance;              // no lock here
 
-    std::lock(mutex);
-    if (!instance) instance = new SLM(period);
+    mutex.lock();
+    if (!instance) instance = new SML(period);
     mutex.unlock();
 
     return instance;
