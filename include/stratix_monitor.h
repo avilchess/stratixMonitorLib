@@ -14,20 +14,6 @@
 #include <chrono>
 #include <vector>
 
-int8_t bmcUsbWriteFunction(uint8_t* buffer, uint16_t* length) {
-    int writeResult = bw_bmc_usb_write(usbHandle, buffer, *length);
-    if (writeResult == *length)
-        return 0;
-    return -1;
-}
-
-int8_t bmcUsbReadFunction(uint8_t* buffer, uint16_t* length) {
-    int readResult;
-    readResult = bw_bmc_usb_read(usbHandle, buffer, 1000);
-    *length = readResult;
-    return 0;
-}
-
 class HardwareCounters {
 private:
     float total_energy;                         // in joules
@@ -72,6 +58,8 @@ private:
     SML(int32_t period);                     // forbidden to call directly because it is a singleton
     void initialize_sublibraries();
     void read_hardware_counters();
+    int8_t bmcUsbWriteFunction(uint8_t* buffer, uint16_t* length);
+    int8_t bmcUsbReadFunction(uint8_t* buffer, uint16_t* length);
 
 public:
     SML * getInstance(int32_t period = 100);                   // the only way to get access
@@ -109,6 +97,20 @@ void SML::initialize_sublibraries() {
         std::cout << "Failed to initialise MCTP/PLDM Library!" << std::endl;
         exit(-1);
     }
+}
+
+int8_t SML::bmcUsbWriteFunction(uint8_t* buffer, uint16_t* length) {
+    int writeResult = bw_bmc_usb_write(usbHandle, buffer, *length);
+    if (writeResult == *length)
+        return 0;
+    return -1;
+}
+
+int8_t SML::bmcUsbReadFunction(uint8_t* buffer, uint16_t* length) {
+    int readResult;
+    readResult = bw_bmc_usb_read(usbHandle, buffer, 1000);
+    *length = readResult;
+    return 0;
 }
 
 void SML::read_hardware_counters(){
