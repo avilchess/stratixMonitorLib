@@ -75,11 +75,11 @@ SML::SML(int32_t period){
     current_state = HardwareCounters(0.0);
     //monitor_thread = std::thread(read_hardware_counters);
 
-    monitor_thread = std::thread(&SML::read_hardware_counters, this)
+    monitor_thread = std::thread(&SML::read_hardware_counters, this);
     monitor_thread.detach();
 }
 
-SML * SML::getInstance(int32_t period = 100) {
+SML * SML::getInstance(int32_t period) {
     if (instance) return instance;              // no lock here
 
     mutex.lock();
