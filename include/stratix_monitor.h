@@ -58,8 +58,8 @@ private:
     SML(int32_t period);                     // forbidden to call directly because it is a singleton
     void initialize_sublibraries();
     void read_hardware_counters();
-    int8_t bmcUsbWriteFunction(uint8_t* buffer, uint16_t* length);
-    char * bmcUsbReadFunction(unsigned char** buffer, short unsigned int* length);
+    char * bmcUsbWriteFunction(unsigned char* buffer, unsigned short int* length);
+    int8_t bmcUsbReadFunction(uint8_t* buffer, uint16_t* length);
 
 public:
     static SML * getInstance(int32_t period = 100);                   // the only way to get access
