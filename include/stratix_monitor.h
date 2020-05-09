@@ -59,7 +59,7 @@ private:
     void initialize_sublibraries();
     void read_hardware_counters();
     int8_t bmcUsbWriteFunction(uint8_t* buffer, uint16_t* length);
-    int8_t bmcUsbReadFunction(uint8_t* buffer, uint16_t* length);
+    char * bmcUsbReadFunction(unsigned char** buffer, short unsigned int* length);
 
 public:
     static SML * getInstance(int32_t period = 100);                   // the only way to get access
