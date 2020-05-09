@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <chrono>
+#include <vector>
 
 
 class HardwareCounters {
@@ -24,14 +25,12 @@ public:
     };
 
     HardwareCounters operator + (HardwareCounters const &obj) {
-        HardwareCounters res;
-        res.total_energy = total_energy + obj.total_energy;
+        HardwareCounters res(total_energy + obj.total_energy);
         return res;
     }
 
     HardwareCounters operator - (HardwareCounters const &obj) {
-        HardwareCounters res;
-        res.total_energy = total_energy - obj.total_energy;
+        HardwareCounters res(total_energy - obj.total_energy);
         return res;
     }
 
@@ -46,7 +45,7 @@ private:
     // Fields
     usb_dev_handle* usbHandle = NULL;
     BW_MCTP_PLDM_HANDLE mctpPldmHandle;
-    static * SML instance;
+    static  SML * instance = NULL;
     std::mutex mutex;
     std::thread monitor_thread;
     float time_period;                          // in milliseconds
@@ -63,9 +62,9 @@ public:
     HardwareCounters get_hardware_counters();
 };
 
-SML * SML::instance = NULL;
+//SML * SML::instance = NULL;
 
-SMM::SML(float period){
+SML::SML(float period){
     time_period = period;
     initialize_sublibraries();
     current_state = HardwareCounters(0.0);
