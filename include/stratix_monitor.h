@@ -48,7 +48,7 @@ private:
     // Fields
     usb_dev_handle* usbHandle = NULL;
     BW_MCTP_PLDM_HANDLE mctpPldmHandle;
-    SML * instance = NULL;
+    static SML * instance;
     std::mutex mutex;
     std::thread monitor_thread;
     int32_t time_period;                          // in milliseconds
@@ -62,9 +62,12 @@ private:
     int8_t bmcUsbReadFunction(uint8_t* buffer, uint16_t* length);
 
 public:
-    SML * getInstance(int32_t period = 100);                   // the only way to get access
+    static SML * getInstance(int32_t period = 100);                   // the only way to get access
     HardwareCounters get_hardware_counters();
 };
+
+SML * SML::instance = nullptr;
+
 
 SML::SML(int32_t period){
     time_period = period;
