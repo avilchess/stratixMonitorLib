@@ -61,7 +61,7 @@ private:
     SML * instance = NULL;
     std::mutex mutex;
     std::thread monitor_thread;
-    float time_period;                          // in milliseconds
+    int32_t time_period;                          // in milliseconds
     HardwareCounters current_state;
 
     //Methods
@@ -70,7 +70,7 @@ private:
     void read_hardware_counters();
 
 public:
-    static SML * getInstance(float period = 100);                   // the only way to get access
+    SML * getInstance(int32_t period = 100);                   // the only way to get access
     HardwareCounters get_hardware_counters();
 };
 
@@ -81,7 +81,7 @@ SML::SML(float period){
     monitor_thread = std::thread(read_hardware_counters);
 }
 
-SML * SML::getInstance(float period = 100) {
+SML * SML::getInstance(int32_T period = 100) {
     if (instance) return instance;              // no lock here
 
     std::lock(mutex);
