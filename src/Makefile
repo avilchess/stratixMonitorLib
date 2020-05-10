@@ -26,3 +26,14 @@ FPGACounters.o: ${INCLUDEDIR}/FPGACounters.h FPGACounters.cpp
 StratixMonitor.o: ${INCLUDEDIR}/StratixMonitor.h StratixMonitor.cpp ${INCLUDEDIR}/FPGACounters.h FPGACounters.cpp
 	mkdir -p $(BINARYDIR)
 	g++ -I${INCLUDEDIR} -L$(TEMP_LINK_PATH_TO_BW_BMC_USB_LIB) -lbw_bmc_usb -L$(TEMP_LINK_PATH_TO_BW_MCTP_PLDM_LIB) -lbw_mctp_pldm -lusb -lm -c StratixMonitor.cpp -o ${BINARYDIR}/StratixMonitor.o -std=c++11
+
+FPGACounters.so: ${INCLUDEDIR}/FPGACounters.h FPGACounters.cpp
+	mkdir -p $(BINARYDIR)
+	g++ -fpic -c FPGACounters.cpp -o ${BINARYDIR}/FPGACounters.dynamic
+	g++ -I${INCLUDEDIR} -shared libFPGACounters.so ${BINARYDIR}/FPGACounters.dynamic
+
+StratixMonitor.so: ${INCLUDEDIR}/StratixMonitor.h StratixMonitor.cpp ${INCLUDEDIR}/FPGACounters.h FPGACounters.cpp
+	mkdir -p $(BINARYDIR)
+	g++ -fpic -c FPGACounters.cpp -o ${BINARYDIR}/FPGACounters.dynamic
+	g++ -fpic -c StratixMonitor.cpp -o ${BINARYDIR}/StratixMonitor.dynamic
+	g++ -I${INCLUDEDIR} -L$(TEMP_LINK_PATH_TO_BW_BMC_USB_LIB) -lbw_bmc_usb -L$(TEMP_LINK_PATH_TO_BW_MCTP_PLDM_LIB) -lbw_mctp_pldm -lusb -lm -shared libStratixMonitor.so ${BINARYDIR}/StratixMonitor.dynamic ${BINARYDIR}/FPGACounters.dynamic -std=c++11
