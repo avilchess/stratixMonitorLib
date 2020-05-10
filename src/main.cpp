@@ -12,7 +12,7 @@
 int main(int argc, char *argv[]) {
 
     StratixMonitor *StratixMonitor = StratixMonitor::getInstance(100);
-    auto counter0 = SStratixMonitor->get_fpga_counters();
+    auto counter0 = StratixMonitor->get_fpga_counters();
     std::cout << "Counter0: " << counter0.getCountersState()[0] << "joules." << std::endl;
 
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
