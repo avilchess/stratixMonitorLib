@@ -58,7 +58,8 @@ public:
     std::vector<float> getCounters(){
         std::vector<float> res;
         res.push_back(total_energy);
-    };
+        return res;
+    }
 };
 
 class SML{
