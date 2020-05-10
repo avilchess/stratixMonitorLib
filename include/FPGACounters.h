@@ -19,7 +19,7 @@ public:
     FPGACounters operator + (FPGACounters const &obj);
     FPGACounters operator - (FPGACounters const &obj);
 
-    std::vector<float> getCountersStates();
+    std::vector<float> getCountersState();
 };
 
 #endif //STRATIXMONITORLIB_FPGACOUNTERS_H
