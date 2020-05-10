@@ -22,7 +22,7 @@ FPGACounters FPGACounters::operator - (FPGACounters const &obj) {
     return res;
 }
 
-std::vector<float> FPGACounters::getFPGACounters(){
+std::vector<float> FPGACounters::getCountersStates(){
     std::vector<float> res;
     res.push_back(total_energy);
     return res;
