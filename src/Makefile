@@ -10,14 +10,14 @@ BIN_FILE=${BINARYDIR}/main
 
 all: main.cpp libStratixMonitor.a
 	mkdir -p $(BINARYDIR)
-	g++ -I${INCLUDEDIR} main.cpp -L${BINARYDIR} -llibStratixMonitor -o $(BIN_FILE) -Wall -Werror -std=c++11
+	g++ -I${INCLUDEDIR} main.cpp -L${BINARYDIR} -lStratixMonitor -o $(BIN_FILE) -Wall -Werror -std=c++11
 
 clean:
 	rm $(BINARYDIR)/${BINFILE} $(BINARYDIR)/*.o
 
 libStratixMonitor.a: StratixMonitor.o StratixMonitor.cpp FPGACounters.o
 	mkdir -p $(BINARYDIR)
-	ar rcs $(BINARYDIR)/libStratixMonitor.a $(BINARYDIR)/*.o
+	ar rcs $(BINARYDIR)/libStratixMonitor.a $(BINARYDIR)/FPGACounters.o $(BINARYDIR)/StratixMonitor.o
 
 FPGACounters.o: ${INCLUDEDIR}/FPGACounters.h FPGACounters.cpp
 	mkdir -p $(BINARYDIR)
