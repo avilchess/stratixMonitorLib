@@ -19,7 +19,7 @@ clean:
 	rm $(BINARYDIR)/${BINFILE} $(BINARYDIR)/*.o
 
 
-libStratixMonitor.a: StratixMonitor.h StratixMonitor.cpp FPGACounters.h FPGACounters.cpp
+libStratixMonitor.a: ${INCLUDEDIR}/StratixMonitor.h StratixMonitor.cpp ${INCLUDEDIR}/FPGACounters.h FPGACounters.cpp
 	mkdir -p $(BINARYDIR)
 	ar -cvq $(BINARYDIR)/libStratixMonitor.a $(BINARYDIR)/*.o
 
