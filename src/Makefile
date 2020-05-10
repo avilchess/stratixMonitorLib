@@ -10,14 +10,14 @@ BIN_FILE=${BINARYDIR}/main
 
 all: main.cpp libStratixMonitor.a
 	mkdir -p $(BINARYDIR)
-	g++ -I${INCLUDEDIR} main.cpp ${BINARYDIR}/libStratixMonitor.a -o $(BIN_FILE) -Wall -Werror -std=c++11
+	g++ -I${INCLUDEDIR} main.cpp -L${BINARYDIR} -llibStratixMonitor -o $(BIN_FILE) -Wall -Werror -std=c++11
 
 clean:
 	rm $(BINARYDIR)/${BINFILE} $(BINARYDIR)/*.o
 
-libStratixMonitor.a: ${INCLUDEDIR}/StratixMonitor.h StratixMonitor.cpp ${INCLUDEDIR}/FPGACounters.h FPGACounters.cpp
+libStratixMonitor.a: StratixMonitor.o StratixMonitor.cpp FPGACounters.o
 	mkdir -p $(BINARYDIR)
-	ar -cvq $(BINARYDIR)/libStratixMonitor.a $(BINARYDIR)/*.o
+	ar rcs $(BINARYDIR)/libStratixMonitor.a $(BINARYDIR)/*.o
 
 FPGACounters.o: ${INCLUDEDIR}/FPGACounters.h FPGACounters.cpp
 	mkdir -p $(BINARYDIR)
@@ -26,3 +26,4 @@ FPGACounters.o: ${INCLUDEDIR}/FPGACounters.h FPGACounters.cpp
 StratixMonitor.o: ${INCLUDEDIR}/StratixMonitor.h StratixMonitor.cpp
 	mkdir -p $(BINARYDIR)
 	g++ -I${INCLUDEDIR} -L$(TEMP_LINK_PATH_TO_BW_BMC_USB_LIB) -lbw_bmc_usb -L$(TEMP_LINK_PATH_TO_BW_MCTP_PLDM_LIB) -lbw_mctp_pldm -lusb -lm -c FPGACounters.cpp -o ${BINARYDIR}/StratixMonitor.o
+

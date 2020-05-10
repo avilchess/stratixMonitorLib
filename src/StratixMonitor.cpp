@@ -38,8 +38,6 @@ StratixMonitor::StratixMonitor(int32_t period){
     time_period = period;
     initialize_sublibraries();
     current_state = FPGACounters(0.0);
-    //monitor_thread = std::thread(read_hardware_counters);
-
     monitor_thread = std::thread(&StratixMonitor::read_hardware_counters, this);
     monitor_thread.detach();
 }

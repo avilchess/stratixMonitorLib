@@ -9,7 +9,7 @@
 #include <thread>
 #include <mutex>
 
-class StratixMonitor{
+class StratixMonitor {
 private:
     // Fields
     static StratixMonitor * instance;
