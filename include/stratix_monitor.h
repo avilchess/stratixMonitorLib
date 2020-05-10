@@ -14,6 +14,8 @@
 #include <chrono>
 #include <vector>
 
+int8_t bmcUsbReadFunction(uint8_t* buffer, uint16_t* length);
+int8_t bmcUsbWriteFunction(uint8_t* buffer, uint16_t* length);
 sb_dev_handle* usbHandle = NULL;
 
 int8_t bmcUsbWriteFunction(uint8_t* buffer, uint16_t* length) {
