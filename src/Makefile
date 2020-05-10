@@ -13,7 +13,7 @@ all: main.cpp libStratixMonitor.so
 	g++ -I${INCLUDEDIR} main.cpp -L${BINARYDIR} -lStratixMonitor -L$(TEMP_LINK_PATH_TO_BW_BMC_USB_LIB) -lbw_bmc_usb -L$(TEMP_LINK_PATH_TO_BW_MCTP_PLDM_LIB) -lbw_mctp_pldm -lusb -lm -o $(BIN_FILE) -Wall -Werror -std=c++11
 
 clean:
-	rm $(BINARYDIR)/${BINFILE} $(BINARYDIR)/*.o
+	rm $(BINARYDIR)/${BINFILE} $(BINARYDIR)/*.o $(BINARYDIR)/*.so
 
 # libStratixMonitor.a: StratixMonitor.o FPGACounters.o
 # 	mkdir -p $(BINARYDIR)
