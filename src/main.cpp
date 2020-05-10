@@ -9,9 +9,10 @@
 #include "StratixMonitor.h"
 #include "FPGACounters.h"
 
-int main (int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 
-    StratixMonitor * StratixMonitor = StratixMonitor::getInstance(100);
+    StratixMonitor *StratixMonitor = StratixMonitor::getInstance(100);
+    auto counter0 = SStratixMonitor->get_fpga_counters();
 
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     auto counter1 = StratixMonitor->get_fpga_counters();
@@ -24,6 +25,10 @@ int main (int argc, char *argv[]) {
     std::this_thread::sleep_for(std::chrono::milliseconds(5000));
     auto counter3 = StratixMonitor->get_fpga_counters();
     std::cout << "Counter3: " << counter3.getCountersState()[0] << std::endl;
+
+    auto difference = counter3 - counter0;
+    std::cout << "Difference: "
+    diffrence.getCountersState()[0] << std::endl;
 
     return 0;
 }

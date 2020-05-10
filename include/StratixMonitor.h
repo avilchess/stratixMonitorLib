@@ -12,19 +12,22 @@
 class StratixMonitor {
 private:
     // Fields
-    static StratixMonitor * instance;
-    int32_t time_period;                                            // in milliseconds
+    static StratixMonitor *instance;
+    int32_t time_period;                                         // in milliseconds
     FPGACounters current_state;
     std::mutex my_mutex;
     std::thread monitor_thread;
 
     //Methods
-    StratixMonitor(int32_t period);                                // forbidden to call directly because it is a singleton
+    StratixMonitor(int32_t period);                             // forbidden to call directly because it is a singleton
+
     void initialize_sublibraries();
+
     void read_fpga_counters();
 
 public:
-    static StratixMonitor * getInstance(int32_t period = 100);     // the only way to get access
+    static StratixMonitor *getInstance(int32_t period = 100);   // the only way to get access
+
     FPGACounters get_fpga_counters();
 };
 

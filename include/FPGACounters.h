@@ -14,10 +14,12 @@ private:
 
 public:
     FPGACounters();
+
     FPGACounters(float t_energy);
 
-    FPGACounters operator + (FPGACounters const &obj);
-    FPGACounters operator - (FPGACounters const &obj);
+    FPGACounters operator+(FPGACounters const &obj);
+
+    FPGACounters operator-(FPGACounters const &obj);
 
     std::vector<float> getCountersState();
 };

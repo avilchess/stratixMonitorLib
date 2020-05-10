@@ -4,25 +4,25 @@
 
 #include "FPGACounters.h"
 
-FPGACounters::FPGACounters(){
+FPGACounters::FPGACounters() {
     total_energy = 0.0;
 };
 
-FPGACounters::FPGACounters(float t_energy){
+FPGACounters::FPGACounters(float t_energy) {
     total_energy = t_energy;
 };
 
-FPGACounters FPGACounters::operator + (FPGACounters const &obj) {
+FPGACounters FPGACounters::operator+(FPGACounters const &obj) {
     FPGACounters res(total_energy + obj.total_energy);
     return res;
 }
 
-FPGACounters FPGACounters::operator - (FPGACounters const &obj) {
+FPGACounters FPGACounters::operator-(FPGACounters const &obj) {
     FPGACounters res(total_energy - obj.total_energy);
     return res;
 }
 
-std::vector<float> FPGACounters::getCountersState(){
+std::vector<float> FPGACounters::getCountersState() {
     std::vector<float> res;
     res.push_back(total_energy);
     return res;

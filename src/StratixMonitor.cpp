@@ -15,16 +15,16 @@
 #include "/usr/share/bittware/520nmx/cots/bw_mctp_pldm_lib/bw_mctp_pldm_lib.h"
 
 BW_MCTP_PLDM_HANDLE mctpPldmHandle;
-usb_dev_handle* usbHandle = NULL;
+usb_dev_handle *usbHandle = NULL;
 
-int8_t bmcUsbWriteFunction(uint8_t* buffer, uint16_t* length) {
+int8_t bmcUsbWriteFunction(uint8_t *buffer, uint16_t *length) {
     int writeResult = bw_bmc_usb_write(usbHandle, buffer, *length);
     if (writeResult == *length)
         return 0;
     return -1;
 }
 
-int8_t bmcUsbReadFunction(uint8_t* buffer, uint16_t* length) {
+int8_t bmcUsbReadFunction(uint8_t *buffer, uint16_t *length) {
     int readResult;
     readResult = bw_bmc_usb_read(usbHandle, buffer, 1000);
     *length = readResult;
@@ -32,9 +32,9 @@ int8_t bmcUsbReadFunction(uint8_t* buffer, uint16_t* length) {
 }
 
 
-StratixMonitor * StratixMonitor::instance = nullptr;
+StratixMonitor *StratixMonitor::instance = nullptr;
 
-StratixMonitor::StratixMonitor(int32_t period){
+StratixMonitor::StratixMonitor(int32_t period) {
     time_period = period;
     initialize_sublibraries();
     current_state = FPGACounters(0.0);
@@ -42,7 +42,7 @@ StratixMonitor::StratixMonitor(int32_t period){
     //monitor_thread.detach();
 }
 
-StratixMonitor * StratixMonitor::getInstance(int32_t period) {
+StratixMonitor *StratixMonitor::getInstance(int32_t period) {
     if (instance) return instance;              // no lock here
 
     //my_mutex.lock();
@@ -68,7 +68,7 @@ void StratixMonitor::initialize_sublibraries() {
     }
 }
 
-void StratixMonitor::read_fpga_counters(){
+void StratixMonitor::read_fpga_counters() {
     while (true) {
         float power;
         uint16_t sensorId = 1;
@@ -84,6 +84,6 @@ void StratixMonitor::read_fpga_counters(){
     }
 }
 
-FPGACounters StratixMonitor::get_fpga_counters(){
+FPGACounters StratixMonitor::get_fpga_counters() {
     return current_state;
 }
