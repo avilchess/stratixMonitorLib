@@ -1,11 +1,11 @@
-TEMP_LINK_PATH_TO_BW_BMC_USB_LIB="/usr/share/bittware/520nmx/cots/bw_bmc_usb_lib/"
-TEMP_LINK_PATH_TO_BW_MCTP_PLDM_LIB="/usr/share/bittware/520nmx/cots/bw_mctp_pldm_lib/"
+TEMP_LINK_PATH_TO_BW_BMC_USB_LIB=/usr/share/bittware/520nmx/cots/bw_bmc_usb_lib/
+TEMP_LINK_PATH_TO_BW_MCTP_PLDM_LIB=/usr/share/bittware/520nmx/cots/bw_mctp_pldm_lib/
 
 # Specify the target file and the install directory
-OUTPUTFILELIB="libStratixMonitor.a"
-MAINFILE="main"
-BINARYDIR="../binaries"
-INCLUDEDIR="../include"
+OUTPUTFILELIB=libStratixMonitor.a
+MAINFILE=main
+BINARYDIR=../binaries
+INCLUDEDIR=../include
 
 BIN_FILE="./main"
 
