@@ -28,10 +28,10 @@ int main(int argc, char *argv[]) {
     std::cout << "Counter3: " << counter3.getCountersState()[0] << "joules." << std::endl;
 
     auto difference21 = counter2 - counter1;
-    std::cout << "Difference count2-count1: " << diffrence21.getCountersState()[0] << "joules." << std::endl;
+    std::cout << "Difference count2-count1: " << difference21.getCountersState()[0] << "joules." << std::endl;
 
     auto difference30 = counter3 - counter0;
-    std::cout << "Difference count3-count0: " << diffrence30.getCountersState()[0] << "joules." << std::endl;
+    std::cout << "Difference count3-count0: " << difference30.getCountersState()[0] << "joules." << std::endl;
 
     return 0;
 }
