@@ -6,8 +6,7 @@
 #include <iostream>
 #include <chrono>
 
-#include <stratix_monitor.h>
-
+#include "StratixMonitor.h"
 
 int main (int argc, char *argv[]) {
 
