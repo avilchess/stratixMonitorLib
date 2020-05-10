@@ -2,7 +2,7 @@
 // Created by Antonio Vilches on 10/05/2020.
 //
 
-#include "FPGACounters"
+#include "FPGACounters.h"
 
 FPGACounters::FPGACounters(){
     total_energy = 0.0;
