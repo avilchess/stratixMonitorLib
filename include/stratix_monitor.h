@@ -137,4 +137,9 @@ void SML::read_hardware_counters(){
     }
 }
 
+HardwareCounters SML::get_hardware_counters(){
+    return current_state;
+}
+
+
 #endif //STRATIXMONITORLIB_STRATIX_MONITOR_H
