@@ -9,7 +9,7 @@ INCLUDEDIR=../include
 BIN_FILE=${BINARYDIR}/main
 
 all: main.cpp libStratixMonitor.a
-	mkdir -p $(INSTALLDIR)
+	mkdir -p $(BINARYDIR)
 	g++ -I${INCLUDEDIR} main.cpp ${BINARYDIR}/libStratixMonitor.a -o $(BIN_FILE) -Wall -Werror -std=c++11
 
 clean:
