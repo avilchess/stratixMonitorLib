@@ -33,13 +33,19 @@ int main(int argc, char *argv[]) {
     std::cout << "Counter3: " << counter3.getCountersState()[FPGAEnergyCounter::total_board_energy] << " joules."
               << std::endl;
 
-    auto difference21 = counter2 - counter1;
-    std::cout << "Difference count2-count1: " << difference21.getCountersState()[FPGAEnergyCounter::total_board_energy]
-              << " joules." << std::endl;
+    auto difference31 = counter3 - counter1;
+    std::cout << "Difference count2-count1" << std::endl;
+    std::cout << "Core: " << difference31.getCountersState()[FPGAEnergyCounter::core_energy] << std::endl;
+    std::cout << "ERAM: " << difference31.getCountersState()[FPGAEnergyCounter::eram_energy] << std::endl;
+    std::cout << "UIB: " << difference31.getCountersState()[FPGAEnergyCounter::uib_energy] << std::endl;
+    std::cout << "EXT1: " << difference31.getCountersState()[FPGAEnergyCounter::ext_1_energy] << std::endl;
+    std::cout << "EXT2: " << difference31.getCountersState()[FPGAEnergyCounter::ext_2_energy] << std::endl;
+    std::cout << "PCI-E: " << difference31.getCountersState()[FPGAEnergyCounter::pci_e_energy] << std::endl;
+    std::cout << "Total Board: " << difference31.getCountersState()[FPGAEnergyCounter::total_board_energy] << std::endl;
 
-    auto difference30 = counter3 - counter0;
-    std::cout << "Difference count3-count0: " << difference30.getCountersState()[FPGAEnergyCounter::total_board_energy]
-              << " joules." << std::endl;
+
+
+
 
     return 0;
 }
