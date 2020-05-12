@@ -15,25 +15,28 @@ all: main.cpp libStratixMonitor.so
 clean:
 	rm $(BINARYDIR)/${BINFILE} $(BINARYDIR)/*.o $(BINARYDIR)/*.so
 
-# libStratixMonitor.a: StratixMonitor.o FPGACounters.o
+# libStratixMonitor.a: StratixMonitor.o FPGAEnergyCounters.o
 # 	mkdir -p $(BINARYDIR)
-# 	ar rcs $(BINARYDIR)/libStratixMonitor.a $(BINARYDIR)/FPGACounters.o $(BINARYDIR)/StratixMonitor.o
+# 	ar rcs $(BINARYDIR)/libStratixMonitor.a $(BINARYDIR)/FPGAEnergyCounters.o $(BINARYDIR)/StratixMonitor.o
 
-# FPGACounters.o: ${INCLUDEDIR}/FPGACounters.h FPGACounters.cpp
+# FPGAEnergyCounters.o: ${INCLUDEDIR}/FPGAEnergyCounters.h FPGAEnergyCounters.cpp
 # 	mkdir -p $(BINARYDIR)
-# 	g++ -I${INCLUDEDIR} -c FPGACounters.cpp -o ${BINARYDIR}/FPGACounters.o
+# 	g++ -I${INCLUDEDIR} -c FPGAEnergyCounters.cpp -o ${BINARYDIR}/FPGAEnergyCounters.o
 #
-# StratixMonitor.o: ${INCLUDEDIR}/StratixMonitor.h StratixMonitor.cpp ${INCLUDEDIR}/FPGACounters.h FPGACounters.cpp
+# StratixMonitor.o: ${INCLUDEDIR}/StratixMonitor.h StratixMonitor.cpp ${INCLUDEDIR}/FPGAEnergyCounters.h FPGAEnergyCounters.cpp
 # 	mkdir -p $(BINARYDIR)
 # 	g++ -I${INCLUDEDIR} -L$(TEMP_LINK_PATH_TO_BW_BMC_USB_LIB) -lbw_bmc_usb -L$(TEMP_LINK_PATH_TO_BW_MCTP_PLDM_LIB) -lbw_mctp_pldm -lusb -lm -c StratixMonitor.cpp -o ${BINARYDIR}/StratixMonitor.o -std=c++11
 
-# FPGACounters.so: ${INCLUDEDIR}/FPGACounters.h FPGACounters.cpp
+# FPGAEnergyCounters.so: ${INCLUDEDIR}/FPGAEnergyCounters.h FPGAEnergyCounters.cpp
 # 	mkdir -p $(BINARYDIR)
-# 	g++ -I${INCLUDEDIR} -fpic -c FPGACounters.cpp -o ${BINARYDIR}/FPGACounters.o
-# 	g++  -shared libFPGACounters.so ${BINARYDIR}/FPGACounters.o
+# 	g++ -I${INCLUDEDIR} -fpic -c FPGAEnergyCounters.cpp -o ${BINARYDIR}/FPGAEnergyCounters.o
+# 	g++  -shared libFPGACounters.so ${BINARYDIR}/FPGAEnergyCounters.o
 
-libStratixMonitor.so: ${INCLUDEDIR}/StratixMonitor.h StratixMonitor.cpp ${INCLUDEDIR}/FPGACounters.h FPGACounters.cpp
+libStratixMonitor.so: ${INCLUDEDIR}/StratixMonitor.h StratixMonitor.cpp ${INCLUDEDIR}/FPGAEnergyCounters.h FPGAEnergyCounters.cpp
 	mkdir -p $(BINARYDIR)
 	g++ -I${INCLUDEDIR} -fpic -c StratixMonitor.cpp -o ${BINARYDIR}/StratixMonitor.o -std=c++11
-	g++ -I${INCLUDEDIR} -fpic -c FPGACounters.cpp -o ${BINARYDIR}/FPGACounters.o -std=c++11
-	g++ -I${INCLUDEDIR} -L$(TEMP_LINK_PATH_TO_BW_BMC_USB_LIB) -lbw_bmc_usb -L$(TEMP_LINK_PATH_TO_BW_MCTP_PLDM_LIB) -lbw_mctp_pldm -lusb -lm -shared -o ${BINARYDIR}/libStratixMonitor.so ${BINARYDIR}/StratixMonitor.o ${BINARYDIR}/FPGACounters.o -std=c++11
+	g++ -I${INCLUDEDIR} -fpic -c FPGAEnergyCounters.cpp -o ${BINARYDIR}/FPGAEnergyCounters.o -std=c++11
+	g++ -I${INCLUDEDIR} -L$(TEMP_LINK_PATH_TO_BW_BMC_USB_LIB) -lbw_bmc_usb -L$(TEMP_LINK_PATH_TO_BW_MCTP_PLDM_LIB) -lbw_mctp_pldm -lusb -lm -shared -o ${BINARYDIR}/libStratixMonitor.so ${BINARYDIR}/StratixMonitor.o ${BINARYDIR}/FPGAEnergyCounters.o -std=c++11
+
+install:
+    mv ${BINARYDIR}/libStratixMonitor.so /usr/local/lib/libStratixMonitor.so

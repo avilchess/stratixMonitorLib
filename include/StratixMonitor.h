@@ -13,25 +13,30 @@ class StratixMonitor {
 private:
     // Fields
     static StratixMonitor *instance;
-    int32_t time_period;                                         // in milliseconds
-    std::chrono::time_point<std::chrono::high_resolution_clock> ts;
-    FPGACounters current_state;
-    float idle_power;
-    uint16_t sensorId;
-    std::mutex my_mutex;
+    int32_t time_period;                                                                        // in milliseconds
+    FPGAPowerCounters power_state;
+    FPGAEnergyCounters energy_state;
+    static std::mutex my_mutex;
     std::thread monitor_thread;
 
     //Methods
     StratixMonitor(int32_t period);                             // forbidden to call directly because it is a singleton
-
     void initialize_sublibraries();
 
-    void read_fpga_counters();
+    [[noreturn]] void read_fpga_counters();
+
+    float get_power_from_voltage_and_current_sensors(int32_t sensor_voltage, int32_t sensor_current);
+
+    void update_power_and_energy_with_last_measure(FPGAPowerCounters instant_power);
 
 public:
-    static StratixMonitor *getInstance(int32_t period = 100);   // the only way to get access
+    static StratixMonitor *getInstance(int32_t period = 10);   // the only way to get access
 
-    FPGACounters get_fpga_counters();
+    FPGAPowerCounters get_current_power_counters();
+
+    FPGAEnergyCounters get_fpga_counters();
+
+    float get_counter_state_from_sensor(int32_t sensor_id);
 };
 
 #endif //STRATIXMONITORLIB_STRATIX_MONITOR_H
