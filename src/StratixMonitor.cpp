@@ -4,6 +4,7 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <mutex>
 
 #include "StratixMonitor.h"
 #include "FPGACounters.h"
@@ -39,7 +40,7 @@ StratixMonitor::StratixMonitor(int32_t period) {
     monitor_thread = std::thread(&StratixMonitor::read_fpga_counters, this);
 }
 
-StratixMonitor *StratixMonitor::getInstance(int32_t period) {
+StratixMonitor* StratixMonitor::getInstance(int32_t period) {
     if (instance) return instance;                              // no lock here
 
     my_mutex.lock();

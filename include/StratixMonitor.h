@@ -16,7 +16,7 @@ private:
     int32_t time_period;                                                                        // in milliseconds
     FPGAPowerCounters power_state;
     FPGAEnergyCounters energy_state;
-    static std::mutex my_mutex;
+    std::mutex my_mutex;
     std::thread monitor_thread;
 
     //Methods
