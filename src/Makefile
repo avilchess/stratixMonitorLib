@@ -39,4 +39,4 @@ libStratixMonitor.so: ${INCLUDEDIR}/StratixMonitor.h StratixMonitor.cpp ${INCLUD
 	g++ -I${INCLUDEDIR} -L$(TEMP_LINK_PATH_TO_BW_BMC_USB_LIB) -lbw_bmc_usb -L$(TEMP_LINK_PATH_TO_BW_MCTP_PLDM_LIB) -lbw_mctp_pldm -lusb -lm -shared -o ${BINARYDIR}/libStratixMonitor.so ${BINARYDIR}/StratixMonitor.o ${BINARYDIR}/FPGAEnergyCounters.o -std=c++11
 
 install:
-    mv ${BINARYDIR}/libStratixMonitor.so /usr/local/lib/libStratixMonitor.so
+	mv ${BINARYDIR}/libStratixMonitor.so /usr/local/lib/libStratixMonitor.so
