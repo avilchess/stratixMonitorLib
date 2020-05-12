@@ -2,12 +2,8 @@
 // Created by Antonio Vilches on 10/05/2020.
 //
 
-#include <mutex>
-#include <thread>
 #include <cstdlib>
 #include <iostream>
-#include <chrono>
-#include <vector>
 
 #include "StratixMonitor.h"
 #include "FPGACounters.h"
@@ -38,6 +34,7 @@ StratixMonitor::StratixMonitor(int32_t period) {
     time_period = period;
     initialize_sublibraries();
     current_state = FPGACounters(0.0);
+    ts=std::chrono::high_resolution_clock::now();
     monitor_thread = std::thread(&StratixMonitor::read_fpga_counters, this);
     //monitor_thread.detach();
 }
@@ -66,21 +63,24 @@ void StratixMonitor::initialize_sublibraries() {
         std::cout << "Failed to initialise MCTP/PLDM Library!" << std::endl;
         exit(-1);
     }
+    sensorId = 1;
+    BwMctpPldm_getNumericSensorReadingById(mctpPldmHandle, &idle_power, sensorId);
 }
 
 void StratixMonitor::read_fpga_counters() {
     while (true) {
         float power;
-        uint16_t sensorId = 1;
+        std::this_thread::sleep_for(std::chrono::milliseconds(time_period));
+
         BwMctpPldm_getNumericSensorReadingById(mctpPldmHandle, &power, sensorId);
-
+        auto tnow = std::chrono::high_resolution_clock::now();
         // Integrate power in time to get energy in joules
-        float time = (time_period / 1000.0f);
-        float energy = power * time;
-
+        float time = std::chrono::duration<float>(tnow-ts).count();
+        float energy = (power-idle_power) * time;
+        ts=tnow;
         auto last_value_counters = FPGACounters(energy);
         current_state = current_state + last_value_counters;
-        std::this_thread::sleep_for(std::chrono::milliseconds(time_period));
+
     }
 }
 

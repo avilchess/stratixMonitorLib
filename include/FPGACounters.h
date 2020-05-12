@@ -7,6 +7,12 @@
 #define STRATIXMONITORLIB_FPGACOUNTERS_H
 
 #include <vector>
+#include <chrono>
+
+struct counter_t {
+  float counter;
+  std::chrono::time_point<std::chrono::high_resolution_clock> t_stamp;
+};
 
 class FPGACounters {
 private:

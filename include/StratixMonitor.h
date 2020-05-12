@@ -14,7 +14,10 @@ private:
     // Fields
     static StratixMonitor *instance;
     int32_t time_period;                                         // in milliseconds
+    std::chrono::time_point<std::chrono::high_resolution_clock> ts;
     FPGACounters current_state;
+    float idle_power;
+    uint16_t sensorId;
     std::mutex my_mutex;
     std::thread monitor_thread;
 
