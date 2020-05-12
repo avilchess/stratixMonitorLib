@@ -43,9 +43,9 @@ StratixMonitor::StratixMonitor(int32_t period) {
 StratixMonitor* StratixMonitor::getInstance(int32_t period) {
     if (instance) return instance;                              // no lock here
 
-    my_mutex.lock();
+    //my_mutex.lock();
     if (!instance) instance = new StratixMonitor(period);
-    my_mutex.unlock();
+    //my_mutex.unlock();
 
     return instance;
 }
