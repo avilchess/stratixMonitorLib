@@ -36,13 +36,15 @@ int main(int argc, char *argv[]) {
 
     auto difference31 = counter3 - counter1;
     std::cout << "Difference count3-count1: " << std::endl;
-    std::cout << "Core: " << difference31.getCountersState()[FPGAEnergyCounter::core_energy] << std::endl;
-    std::cout << "ERAM: " << difference31.getCountersState()[FPGAEnergyCounter::eram_energy] << std::endl;
-    std::cout << "UIB: " << difference31.getCountersState()[FPGAEnergyCounter::uib_energy] << std::endl;
-    std::cout << "EXT1: " << difference31.getCountersState()[FPGAEnergyCounter::ext_1_energy] << std::endl;
-    std::cout << "EXT2: " << difference31.getCountersState()[FPGAEnergyCounter::ext_2_energy] << std::endl;
-    std::cout << "PCI-E: " << difference31.getCountersState()[FPGAEnergyCounter::pci_e_energy] << std::endl;
-    std::cout << "Total Board: " << difference31.getCountersState()[FPGAEnergyCounter::total_board_energy] << std::endl;
+
+    auto measure = difference31.getCountersState();
+    std::cout << "Core: " << measure[FPGAEnergyCounter::core_energy] << std::endl;
+    std::cout << "ERAM: " << measure[FPGAEnergyCounter::eram_energy] << std::endl;
+    std::cout << "UIB: " << measure[FPGAEnergyCounter::uib_energy] << std::endl;
+    std::cout << "EXT1: " << measure[FPGAEnergyCounter::ext_1_energy] << std::endl;
+    std::cout << "EXT2: " << measure[FPGAEnergyCounter::ext_2_energy] << std::endl;
+    std::cout << "PCI-E: " << measure[FPGAEnergyCounter::pci_e_energy] << std::endl;
+    std::cout << "Total Board: " << measure[FPGAEnergyCounter::total_board_energy] << std::endl;
 
     return 0;
 }
