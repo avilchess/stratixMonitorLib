@@ -29,12 +29,12 @@ private:
 
     void update_power_and_energy_with_last_measure(FPGAPowerCounters instant_power);
 
+    FPGAPowerCounters get_current_power_counters();
+
 public:
     static StratixMonitor *getInstance(int32_t period = 10);   // the only way to get access
 
-    FPGAPowerCounters get_current_power_counters();
-
-    FPGAEnergyCounters get_fpga_counters();
+    FPGAEnergyCounters get_energy_counters();
 
     float get_counter_state_from_sensor(int32_t sensor_id);
 };

@@ -83,7 +83,7 @@ void StratixMonitor::update_power_and_energy_with_last_measure(FPGAPowerCounters
     }
 }
 
-FPGAEnergyCounters StratixMonitor::get_fpga_counters() {
+FPGAEnergyCounters StratixMonitor::get_energy_counters() {
     return energy_state;
 }
 
