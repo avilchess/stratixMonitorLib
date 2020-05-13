@@ -8,6 +8,7 @@
 
 #include "FPGACounters.h"
 #include "StratixMonitor.h"
+#include "SensorIds.h"
 
 int main(int argc, char *argv[]) {
 
@@ -28,6 +29,9 @@ int main(int argc, char *argv[]) {
     std::this_thread::sleep_for(std::chrono::milliseconds(5000));
     auto counter3 = StratixMonitor->get_fpga_counters();
     std::cout << "C3: " << counter3.getCountersState()[FPGAEnergyCounter::total_board_energy] << " joules" << std::endl;
+
+    std::cout << "Example accessing a specific sensor [Core Temperature]: ";
+    std::cout <<  StratixMonitor->get_counter_state_from_sensor(SensorId::core_temperature) << std::endl;
 
     auto difference31 = counter3 - counter1;
     std::cout << "Difference count3-count1" << std::endl;
