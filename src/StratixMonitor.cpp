@@ -36,7 +36,7 @@ StratixMonitor::StratixMonitor(int32_t period) {
     initialize_sublibraries();
 
     power_state = get_current_power_counters();
-    energy_state = FPGAEnergyCounters();
+    energy_state = FPGAEnergyCounterState();
     monitor_thread = std::thread(&StratixMonitor::read_fpga_counters, this);
 }
 
@@ -66,7 +66,7 @@ void StratixMonitor::initialize_sublibraries() {
     }
 }
 
-void StratixMonitor::update_power_and_energy_with_last_measure(FPGAPowerCounters instant_power) {
+void StratixMonitor::update_power_and_energy_with_last_measure(FPGAPowerCounterState instant_power) {
     auto timestamp_last_measure = power_state.get_timestamp();
     auto new_energy = instant_power.integrate_energy_from_timestamp(timestamp_last_measure);
 
@@ -83,7 +83,7 @@ void StratixMonitor::update_power_and_energy_with_last_measure(FPGAPowerCounters
     }
 }
 
-FPGAEnergyCounters StratixMonitor::get_energy_counters() {
+FPGAEnergyCounterState StratixMonitor::get_energy_counters() {
     return energy_state;
 }
 
@@ -101,10 +101,10 @@ float StratixMonitor::get_power_from_voltage_and_current_sensors(int32_t sensor_
     return voltage * current;
 }
 
-FPGAPowerCounters StratixMonitor::get_current_power_counters() {
+FPGAPowerCounterState StratixMonitor::get_current_power_counters() {
     auto timestamp = std::chrono::high_resolution_clock::now();
 
-    return FPGAPowerCounters(
+    return FPGAPowerCounterState(
             get_counter_state_from_sensor(SensorId::total_power),
             get_power_from_voltage_and_current_sensors(SensorId::pci_e_voltage, SensorId::pci_e_current),
             get_power_from_voltage_and_current_sensors(SensorId::ext_1_voltage, SensorId::ext_1_current),

@@ -16,22 +16,22 @@ all: ${SRCDIR}/main.cpp libStratixMonitor.so
 clean:
 	rm $(BINARYDIR)/${BINFILE} $(BINARYDIR)/*.o $(BINARYDIR)/*.so
 
-# libStratixMonitor.a: StratixMonitor.o FPGAEnergyCounters.o
+# libStratixMonitor.a: StratixMonitor.o FPGAEnergyCounterState.o
 # 	mkdir -p $(BINARYDIR)
-# 	ar rcs $(BINARYDIR)/libStratixMonitor.a $(BINARYDIR)/FPGAEnergyCounters.o $(BINARYDIR)/StratixMonitor.o
+# 	ar rcs $(BINARYDIR)/libStratixMonitor.a $(BINARYDIR)/FPGAEnergyCounterState.o $(BINARYDIR)/StratixMonitor.o
 
-# FPGAEnergyCounters.o: ${INCLUDEDIR}/FPGAEnergyCounters.h FPGAEnergyCounters.cpp
+# FPGAEnergyCounterState.o: ${INCLUDEDIR}/FPGAEnergyCounterState.h FPGAEnergyCounterState.cpp
 # 	mkdir -p $(BINARYDIR)
-# 	g++ -I${INCLUDEDIR} -c FPGAEnergyCounters.cpp -o ${BINARYDIR}/FPGAEnergyCounters.o
+# 	g++ -I${INCLUDEDIR} -c FPGAEnergyCounterState.cpp -o ${BINARYDIR}/FPGAEnergyCounterState.o
 #
-# StratixMonitor.o: ${INCLUDEDIR}/StratixMonitor.h StratixMonitor.cpp ${INCLUDEDIR}/FPGAEnergyCounters.h FPGAEnergyCounters.cpp
+# StratixMonitor.o: ${INCLUDEDIR}/StratixMonitor.h StratixMonitor.cpp ${INCLUDEDIR}/FPGAEnergyCounterState.h FPGAEnergyCounterState.cpp
 # 	mkdir -p $(BINARYDIR)
 # 	g++ -I${INCLUDEDIR} -L$(TEMP_LINK_PATH_TO_BW_BMC_USB_LIB) -lbw_bmc_usb -L$(TEMP_LINK_PATH_TO_BW_MCTP_PLDM_LIB) -lbw_mctp_pldm -lusb -lm -c StratixMonitor.cpp -o ${BINARYDIR}/StratixMonitor.o -std=c++11
 
-# FPGAEnergyCounters.so: ${INCLUDEDIR}/FPGAEnergyCounters.h FPGAEnergyCounters.cpp
+# FPGAEnergyCounterState.so: ${INCLUDEDIR}/FPGAEnergyCounterState.h FPGAEnergyCounterState.cpp
 # 	mkdir -p $(BINARYDIR)
-# 	g++ -I${INCLUDEDIR} -fpic -c FPGAEnergyCounters.cpp -o ${BINARYDIR}/FPGAEnergyCounters.o
-# 	g++  -shared libFPGACounters.so ${BINARYDIR}/FPGAEnergyCounters.o
+# 	g++ -I${INCLUDEDIR} -fpic -c FPGAEnergyCounterState.cpp -o ${BINARYDIR}/FPGAEnergyCounterState.o
+# 	g++  -shared libFPGACounters.so ${BINARYDIR}/FPGAEnergyCounterState.o
 
 libStratixMonitor.so: ${INCLUDEDIR}/SensorIds.h ${INCLUDEDIR}/StratixMonitor.h ${SRCDIR}/StratixMonitor.cpp ${INCLUDEDIR}/FPGACounters.h ${SRCDIR}/FPGACounters.cpp
 	mkdir -p $(BINARYDIR)

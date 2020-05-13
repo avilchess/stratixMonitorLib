@@ -6,7 +6,7 @@
 #include "SensorIds.h"
 #include <map>
 
-FPGAEnergyCounters::FPGAEnergyCounters() {
+FPGAEnergyCounterState::FPGAEnergyCounterState() {
     total_board = 0.0;
     pci_e = 0.0;
     ext_1 = 0.0;
@@ -22,9 +22,9 @@ FPGAEnergyCounters::FPGAEnergyCounters() {
     uib = 0.0;
 };
 
-FPGAEnergyCounters::FPGAEnergyCounters(float total_board, float pci_e, float ext_1,
-                                       float ext_2, float v3_3, float core, float eram, float vccr,
-                                       float v1_8, float v1_8a, float v2_5, float v1_2, float uib) :
+FPGAEnergyCounterState::FPGAEnergyCounterState(float total_board, float pci_e, float ext_1,
+                                               float ext_2, float v3_3, float core, float eram, float vccr,
+                                               float v1_8, float v1_8a, float v2_5, float v1_2, float uib) :
         total_board(total_board),
         pci_e(pci_e),
         ext_1(ext_1),
@@ -39,9 +39,9 @@ FPGAEnergyCounters::FPGAEnergyCounters(float total_board, float pci_e, float ext
         v1_2(v1_2),
         uib(uib) {}
 
-FPGAEnergyCounters FPGAEnergyCounters::operator+(FPGAEnergyCounters const &obj) {
+FPGAEnergyCounterState FPGAEnergyCounterState::operator+(FPGAEnergyCounterState const &obj) {
 
-    FPGAEnergyCounters res(total_board + obj.total_board,
+    FPGAEnergyCounterState res(total_board + obj.total_board,
                            pci_e + obj.pci_e,
                            ext_1 + obj.ext_1,
                            ext_2 + obj.ext_2,
@@ -52,15 +52,15 @@ FPGAEnergyCounters FPGAEnergyCounters::operator+(FPGAEnergyCounters const &obj) 
                            v1_8 + obj.v1_8,
                            v1_8a + obj.v1_8a,
                            v2_5 + obj.v2_5,
-                           v1_2 + obj.v1_2,
-                           uib + obj.uib);
+                               v1_2 + obj.v1_2,
+                               uib + obj.uib);
 
     return res;
 }
 
-FPGAEnergyCounters FPGAEnergyCounters::operator-(FPGAEnergyCounters const &obj) {
+FPGAEnergyCounterState FPGAEnergyCounterState::operator-(FPGAEnergyCounterState const &obj) {
 
-    FPGAEnergyCounters res(total_board - obj.total_board,
+    FPGAEnergyCounterState res(total_board - obj.total_board,
                            pci_e - obj.pci_e,
                            ext_1 - obj.ext_1,
                            ext_2 - obj.ext_2,
@@ -71,8 +71,8 @@ FPGAEnergyCounters FPGAEnergyCounters::operator-(FPGAEnergyCounters const &obj) 
                            v1_8 - obj.v1_8,
                            v1_8a - obj.v1_8a,
                            v2_5 - obj.v2_5,
-                           v1_2 - obj.v1_2,
-                           uib - obj.uib);
+                               v1_2 - obj.v1_2,
+                               uib - obj.uib);
     return res;
 }
 
@@ -80,7 +80,7 @@ FPGAEnergyCounters FPGAEnergyCounters::operator-(FPGAEnergyCounters const &obj) 
  * This method returns the counter states for a given measurement of FPGA counters.
  * @return
  */
-std::vector<float> FPGAEnergyCounters::getCountersState() {
+std::vector<float> FPGAEnergyCounterState::getCountersState() {
     std::vector<float> res;
     res.push_back(total_board);
     res.push_back(pci_e);
@@ -98,7 +98,7 @@ std::vector<float> FPGAEnergyCounters::getCountersState() {
     return res;
 }
 
-FPGAPowerCounters::FPGAPowerCounters() {
+FPGAPowerCounterState::FPGAPowerCounterState() {
     total_board = 0.0;
     pci_e = 0.0;
     ext_1 = 0.0;
@@ -115,10 +115,10 @@ FPGAPowerCounters::FPGAPowerCounters() {
     timestamp = std::chrono::high_resolution_clock::now();
 };
 
-FPGAPowerCounters::FPGAPowerCounters(float total_board, float pci_e, float ext_1,
-                                     float ext_2, float v3_3, float core, float eram, float vccr,
-                                     float v1_8, float v1_8a, float v2_5, float v1_2, float uib,
-                                     std::chrono::time_point<std::chrono::high_resolution_clock> timestamp) :
+FPGAPowerCounterState::FPGAPowerCounterState(float total_board, float pci_e, float ext_1,
+                                             float ext_2, float v3_3, float core, float eram, float vccr,
+                                             float v1_8, float v1_8a, float v2_5, float v1_2, float uib,
+                                             std::chrono::time_point<std::chrono::high_resolution_clock> timestamp) :
         total_board(total_board),
         pci_e(pci_e),
         ext_1(ext_1),
@@ -134,18 +134,18 @@ FPGAPowerCounters::FPGAPowerCounters(float total_board, float pci_e, float ext_1
         uib(uib),
         timestamp(timestamp) {}
 
-std::chrono::time_point<std::chrono::high_resolution_clock> FPGAPowerCounters::get_timestamp() {
+std::chrono::time_point<std::chrono::high_resolution_clock> FPGAPowerCounterState::get_timestamp() {
     return timestamp;
 }
 
-FPGAEnergyCounters FPGAPowerCounters::integrate_energy_from_timestamp(
+FPGAEnergyCounterState FPGAPowerCounterState::integrate_energy_from_timestamp(
         std::chrono::time_point<std::chrono::high_resolution_clock> timestamp_last_measure) {
     float time = std::chrono::duration<float>(timestamp - timestamp_last_measure).count();
     return *this * time;
 }
 
-FPGAEnergyCounters FPGAPowerCounters::operator*(float time) {
-    return FPGAEnergyCounters(this->total_board * time,
+FPGAEnergyCounterState FPGAPowerCounterState::operator*(float time) {
+    return FPGAEnergyCounterState(this->total_board * time,
                               this->pci_e * time,
                               this->ext_1 * time,
                               this->ext_2 * time,
@@ -156,7 +156,7 @@ FPGAEnergyCounters FPGAPowerCounters::operator*(float time) {
                               this->v1_8 * time,
                               this->v1_8a * time,
                               this->v2_5 * time,
-                              this->v1_2 * time,
-                              this->uib * time
+                                  this->v1_2 * time,
+                                  this->uib * time
     );
 }

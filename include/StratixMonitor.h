@@ -14,8 +14,8 @@ private:
     // Fields
     static StratixMonitor *instance;
     int32_t time_period;                                                                        // in milliseconds
-    FPGAPowerCounters power_state;
-    FPGAEnergyCounters energy_state;
+    FPGAPowerCounterState power_state;
+    FPGAEnergyCounterState energy_state;
     std::mutex my_mutex;
     std::thread monitor_thread;
 
@@ -27,14 +27,14 @@ private:
 
     float get_power_from_voltage_and_current_sensors(int32_t sensor_voltage, int32_t sensor_current);
 
-    void update_power_and_energy_with_last_measure(FPGAPowerCounters instant_power);
+    void update_power_and_energy_with_last_measure(FPGAPowerCounterState instant_power);
 
-    FPGAPowerCounters get_current_power_counters();
+    FPGAPowerCounterState get_current_power_counters();
 
 public:
     static StratixMonitor *getInstance(int32_t period = 10);   // the only way to get access
 
-    FPGAEnergyCounters get_energy_counters();
+    FPGAEnergyCounterState get_energy_counters();
 
     float get_counter_state_from_sensor(int32_t sensor_id);
 };

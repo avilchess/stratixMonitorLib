@@ -30,11 +30,12 @@ int main(int argc, char *argv[]) {
     auto counter3 = StratixMonitor->get_energy_counters();
     std::cout << "C3: " << counter3.getCountersState()[FPGAEnergyCounter::total_board_energy] << " joules" << std::endl;
 
+    std::cout << std::endl;
     std::cout << "Example accessing a specific sensor [Core Temperature]: ";
-    std::cout <<  StratixMonitor->get_counter_state_from_sensor(SensorId::core_temperature) << std::endl;
+    std::cout <<  StratixMonitor->get_counter_state_from_sensor(SensorId::core_temperature) << std::endl << std::endl;
 
     auto difference31 = counter3 - counter1;
-    std::cout << "Difference count3-count1" << std::endl;
+    std::cout << "Difference count3-count1: " << std::endl;
     std::cout << "Core: " << difference31.getCountersState()[FPGAEnergyCounter::core_energy] << std::endl;
     std::cout << "ERAM: " << difference31.getCountersState()[FPGAEnergyCounter::eram_energy] << std::endl;
     std::cout << "UIB: " << difference31.getCountersState()[FPGAEnergyCounter::uib_energy] << std::endl;

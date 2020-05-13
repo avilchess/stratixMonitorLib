@@ -25,7 +25,7 @@ namespace FPGAEnergyCounter {
     constexpr int32_t uib_energy = 12;
 }
 
-class FPGAEnergyCounters {
+class FPGAEnergyCounterState {
 private:
     float total_board;
     float pci_e;
@@ -42,20 +42,20 @@ private:
     float uib;
 
 public:
-    FPGAEnergyCounters();
+    FPGAEnergyCounterState();
 
-    FPGAEnergyCounters(float total_board, float pci_e, float ext_1,
-                       float ext_2, float v3_3, float core, float eram, float vccr,
-                       float v1_8, float v1_8a, float v2_5, float v1_2, float uib);
+    FPGAEnergyCounterState(float total_board, float pci_e, float ext_1,
+                           float ext_2, float v3_3, float core, float eram, float vccr,
+                           float v1_8, float v1_8a, float v2_5, float v1_2, float uib);
 
-    FPGAEnergyCounters operator+(FPGAEnergyCounters const &obj);
+    FPGAEnergyCounterState operator+(FPGAEnergyCounterState const &obj);
 
-    FPGAEnergyCounters operator-(FPGAEnergyCounters const &obj);
+    FPGAEnergyCounterState operator-(FPGAEnergyCounterState const &obj);
 
     std::vector<float> getCountersState();
 };
 
-class FPGAPowerCounters {
+class FPGAPowerCounterState {
 private:
     float total_board;
     float pci_e;
@@ -73,18 +73,18 @@ private:
 
     std::chrono::time_point<std::chrono::high_resolution_clock> timestamp;
 public:
-    FPGAPowerCounters();
+    FPGAPowerCounterState();
 
-    FPGAPowerCounters(float total_board, float pci_e, float ext_1,
-                      float ext_2, float v3_3, float core, float eram, float vccr,
-                      float v1_8, float v1_8a, float v2_5, float v1_2, float uib,
-                      std::chrono::time_point<std::chrono::high_resolution_clock> timestamp);
+    FPGAPowerCounterState(float total_board, float pci_e, float ext_1,
+                          float ext_2, float v3_3, float core, float eram, float vccr,
+                          float v1_8, float v1_8a, float v2_5, float v1_2, float uib,
+                          std::chrono::time_point<std::chrono::high_resolution_clock> timestamp);
 
-    FPGAEnergyCounters operator*(float time);
+    FPGAEnergyCounterState operator*(float time);
 
     std::chrono::time_point<std::chrono::high_resolution_clock> get_timestamp();
 
-    FPGAEnergyCounters
+    FPGAEnergyCounterState
     integrate_energy_from_timestamp(std::chrono::time_point<std::chrono::high_resolution_clock> timestamp_last_measure);
 
 };
