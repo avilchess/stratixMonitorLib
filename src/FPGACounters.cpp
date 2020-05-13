@@ -156,7 +156,7 @@ FPGAEnergyCounterState FPGAPowerCounterState::operator*(float time) {
                               this->v1_8 * time,
                               this->v1_8a * time,
                               this->v2_5 * time,
-                                  this->v1_2 * time,
-                                  this->uib * time
+                              this->v1_2 * time,
+                              this->uib * time
     );
 }
