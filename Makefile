@@ -3,14 +3,15 @@ TEMP_LINK_PATH_TO_BW_MCTP_PLDM_LIB=/usr/share/bittware/520nmx/cots/bw_mctp_pldm_
 
 # Specify the target file and the install directory
 OUTPUTFILELIB=libStratixMonitor.a
-BINARYDIR=../binaries
-INCLUDEDIR=../include
+BINARYDIR=./binaries
+INCLUDEDIR=./include
+SRCDIR=./src
 
 BIN_FILE=${BINARYDIR}/main
 
-all: main.cpp libStratixMonitor.so
+all: ${SRCDIR}/main.cpp libStratixMonitor.so
 	mkdir -p $(BINARYDIR)
-	g++ -I${INCLUDEDIR} main.cpp -L${BINARYDIR} -lStratixMonitor -o $(BIN_FILE) -Wall -Werror -std=c++11
+	g++ -I${INCLUDEDIR} ${SRCDIR}/main.cpp -L${BINARYDIR} -lStratixMonitor -o $(BIN_FILE) -Wall -Werror -std=c++11
 
 clean:
 	rm $(BINARYDIR)/${BINFILE} $(BINARYDIR)/*.o $(BINARYDIR)/*.so
@@ -32,10 +33,10 @@ clean:
 # 	g++ -I${INCLUDEDIR} -fpic -c FPGAEnergyCounters.cpp -o ${BINARYDIR}/FPGAEnergyCounters.o
 # 	g++  -shared libFPGACounters.so ${BINARYDIR}/FPGAEnergyCounters.o
 
-libStratixMonitor.so: ${INCLUDEDIR}/StratixMonitor.h StratixMonitor.cpp ${INCLUDEDIR}/FPGACounters.h FPGACounters.cpp
+libStratixMonitor.so: ${INCLUDEDIR}/SensorIds.h ${INCLUDEDIR}/StratixMonitor.h ${SRCDIR}/StratixMonitor.cpp ${INCLUDEDIR}/FPGACounters.h ${SRCDIR}/FPGACounters.cpp
 	mkdir -p $(BINARYDIR)
-	g++ -I${INCLUDEDIR} -fpic -c StratixMonitor.cpp -o ${BINARYDIR}/StratixMonitor.o -std=c++11
-	g++ -I${INCLUDEDIR} -fpic -c FPGACounters.cpp -o ${BINARYDIR}/FPGACounters.o -std=c++11
+	g++ -I${INCLUDEDIR} -fpic -c ${SRCDIR}/StratixMonitor.cpp -o ${BINARYDIR}/StratixMonitor.o -std=c++11
+	g++ -I${INCLUDEDIR} -fpic -c ${SRCDIR}/FPGACounters.cpp -o ${BINARYDIR}/FPGACounters.o -std=c++11
 	g++ -I${INCLUDEDIR} -L$(TEMP_LINK_PATH_TO_BW_BMC_USB_LIB) -lbw_bmc_usb -L$(TEMP_LINK_PATH_TO_BW_MCTP_PLDM_LIB) -lbw_mctp_pldm -lusb -lm -shared -o ${BINARYDIR}/libStratixMonitor.so ${BINARYDIR}/StratixMonitor.o ${BINARYDIR}/FPGACounters.o -std=c++11
 
 install:

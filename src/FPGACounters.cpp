@@ -60,7 +60,7 @@ FPGAEnergyCounters FPGAEnergyCounters::operator+(FPGAEnergyCounters const &obj) 
 
 FPGAEnergyCounters FPGAEnergyCounters::operator-(FPGAEnergyCounters const &obj) {
 
-    FPGAEnergyCounters res(total_board + obj.total_board,
+    FPGAEnergyCounters res(total_board - obj.total_board,
                            pci_e - obj.pci_e,
                            ext_1 - obj.ext_1,
                            ext_2 - obj.ext_2,
