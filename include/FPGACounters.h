@@ -2,7 +2,6 @@
 // Created by Antonio Vilches on 10/05/2020.
 //
 
-
 #ifndef STRATIXMONITORLIB_FPGACOUNTERS_H
 #define STRATIXMONITORLIB_FPGACOUNTERS_H
 
