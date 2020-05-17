@@ -68,9 +68,9 @@ StratixMonitor::StratixMonitor(int32_t period) {
 StratixMonitor* StratixMonitor::getInstance(int32_t period) {
     if (instance) return instance;                              // no lock here
 
-    StratixMonitor::my_mutex.lock();
+    my_mutex.lock();
     if (!instance) instance = new StratixMonitor(period);
-    StratixMonitor::my_mutex.unlock();
+    my_mutex.unlock();
 
     return instance;
 }
@@ -121,7 +121,7 @@ void StratixMonitor::update_historical_data(const std::vector<float> &sensor_val
     }
 }
 
-[[noreturn]] void StratixMonitor::read_fpga_counters() {
+void StratixMonitor::read_fpga_counters() {
     while (control_thread.fetch_add(0)) {
         std::this_thread::sleep_for(std::chrono::milliseconds(time_period));
 

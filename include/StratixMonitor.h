@@ -34,7 +34,7 @@ private:
 
     static void initialize_sublibraries();
 
-    [[noreturn]] void read_fpga_counters();
+    void read_fpga_counters();
 
     static float get_power_from_voltage_and_current_values(float voltage, float current);
 
