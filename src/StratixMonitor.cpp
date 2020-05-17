@@ -35,7 +35,7 @@ void StratixMonitor::initialize_sensors_registration() {
     if (sensors_registration.empty()){
         sensors_registration.reserve(SensorId::sensor_number);
         for (int i = 0; i < SensorId::sensor_number; i++){
-            sensors_registration.push_back(std::atomic<int32_t>(0));
+            sensors_registration.emplace_back(0);
         }
     }
 }
