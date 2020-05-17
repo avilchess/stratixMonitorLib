@@ -40,11 +40,20 @@ void StratixMonitor::initialize_sensors_registration() {
     }
 }
 
+void StratixMonitor::initialize_historical_data(){
+    if(historical_data.empty()){
+        for (int32_t i = 0; i < SensorId::sensor_number; i++){
+            std::vector<Measure> measures;
+            historical_data.insert({i, measures});
+        }
+    }
+}
+
 StratixMonitor::StratixMonitor(int32_t period) {
     time_period = period;
     initialize_sublibraries();
-
     initialize_sensors_registration();
+    initialize_historical_data();
 
     auto timestamp = std::chrono::high_resolution_clock::now();
     auto values = getAllSensorValues();
@@ -109,6 +118,7 @@ void StratixMonitor::update_historical_data(const std::vector<float> &sensor_val
             std::cout << "Updating sensor: " << i << std::endl;
             auto values = historical_data[i];
             values.emplace_back(timestamp, sensor_values[i]);
+            std::cout << "Size: " << values.size() << std::endl;
         }
     }
 }

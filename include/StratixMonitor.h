@@ -47,6 +47,8 @@ private:
 
     void initialize_sensors_registration();
 
+    void initialize_historical_data();
+
     static std::vector<float> getAllSensorValues();
 
 public:
