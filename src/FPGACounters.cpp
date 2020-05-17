@@ -3,8 +3,7 @@
 //
 
 #include "FPGACounters.h"
-#include "SensorIds.h"
-#include <map>
+#include <vector>
 
 FPGAEnergyCounterState::FPGAEnergyCounterState() {
     total_board = 0.0;

@@ -35,7 +35,7 @@ clean:
 
 libStratixMonitor.so: ${INCLUDEDIR}/SensorIds.h ${INCLUDEDIR}/StratixMonitor.h ${SRCDIR}/StratixMonitor.cpp ${INCLUDEDIR}/FPGACounters.h ${SRCDIR}/FPGACounters.cpp
 	mkdir -p $(BINARYDIR)
-	g++ -I${INCLUDEDIR} -fpic -c ${SRCDIR}/StratixMonitor.cpp -o ${BINARYDIR}/StratixMonitor.o -std=c++11
+	g++ -I${INCLUDEDIR} -I${TEMP_LINK_PATH_TO_BW_BMC_USB_LIB} -I${TEMP_LINK_PATH_TO_BW_MCTP_PLDM_LIB} -fpic -c ${SRCDIR}/StratixMonitor.cpp -o ${BINARYDIR}/StratixMonitor.o -std=c++11
 	g++ -I${INCLUDEDIR} -fpic -c ${SRCDIR}/FPGACounters.cpp -o ${BINARYDIR}/FPGACounters.o -std=c++11
 	g++ -I${INCLUDEDIR} -L$(TEMP_LINK_PATH_TO_BW_BMC_USB_LIB) -lbw_bmc_usb -L$(TEMP_LINK_PATH_TO_BW_MCTP_PLDM_LIB) -lbw_mctp_pldm -lusb -lm -shared -o ${BINARYDIR}/libStratixMonitor.so ${BINARYDIR}/StratixMonitor.o ${BINARYDIR}/FPGACounters.o -std=c++11
 

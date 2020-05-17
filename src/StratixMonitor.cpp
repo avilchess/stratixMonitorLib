@@ -9,8 +9,8 @@
 #include "StratixMonitor.h"
 #include "FPGACounters.h"
 #include "SensorIds.h"
-#include "/usr/share/bittware/520nmx/cots/bw_bmc_usb_lib/bw_bmc_usb_lib.h"
-#include "/usr/share/bittware/520nmx/cots/bw_mctp_pldm_lib/bw_mctp_pldm_lib.h"
+#include "bw_bmc_usb_lib.h"
+#include "bw_mctp_pldm_lib.h"
 
 BW_MCTP_PLDM_HANDLE mctpPldmHandle;
 usb_dev_handle *usbHandle = NULL;
