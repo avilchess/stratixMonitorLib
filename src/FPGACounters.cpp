@@ -52,8 +52,8 @@ FPGAEnergyCounterState FPGAEnergyCounterState::operator+(FPGAEnergyCounterState 
                            v1_8 + obj.v1_8,
                            v1_8a + obj.v1_8a,
                            v2_5 + obj.v2_5,
-                               v1_2 + obj.v1_2,
-                               uib + obj.uib);
+                           v1_2 + obj.v1_2,
+                           uib + obj.uib);
 
     return res;
 }
@@ -71,8 +71,8 @@ FPGAEnergyCounterState FPGAEnergyCounterState::operator-(FPGAEnergyCounterState 
                            v1_8 - obj.v1_8,
                            v1_8a - obj.v1_8a,
                            v2_5 - obj.v2_5,
-                               v1_2 - obj.v1_2,
-                               uib - obj.uib);
+                           v1_2 - obj.v1_2,
+                           uib - obj.uib);
     return res;
 }
 

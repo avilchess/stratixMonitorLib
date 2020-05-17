@@ -31,11 +31,25 @@ int8_t bmcUsbReadFunction(uint8_t *buffer, uint16_t *length) {
 
 StratixMonitor *StratixMonitor::instance = nullptr;
 
+void StratixMonitor::initialize_sensors_registration() {
+    if (sensors_registration.empty()){
+        sensors_registration.reserve(SensorId::sensor_number);
+        for (int i = 0; i < SensorId::sensor_number; i++){
+            sensors_registration.push_back(std::atomic<int32_t>(0));
+        }
+    }
+}
+
 StratixMonitor::StratixMonitor(int32_t period) {
     time_period = period;
     initialize_sublibraries();
 
-    power_state = get_current_power_counters();
+    initialize_sensors_registration();
+
+    auto timestamp = std::chrono::high_resolution_clock::now();
+    auto values = getAllSensorValues();
+    power_state = get_current_power_values(values, timestamp);
+
     energy_state = FPGAEnergyCounterState();
     monitor_thread = std::thread(&StratixMonitor::read_fpga_counters, this);
 }
@@ -75,11 +89,38 @@ void StratixMonitor::update_power_and_energy_with_last_measure(FPGAPowerCounterS
 }
 
 
+std::vector<float> StratixMonitor::getAllSensorValues(){
+    std::vector<float> data;
+    data.reserve(SensorId::sensor_number);
+
+    for ( int32_t i = 1; i < SensorId::sensor_number; i++){
+        data[i] = get_counter_state_from_sensor(i);
+    }
+}
+
+void StratixMonitor::update_historical_data(std::vector<float> sensor_values,
+                            std::chrono::time_point<std::chrono::high_resolution_clock> timestamp){
+
+    for(int32_t i = 1; i < sensors_registration.size(); i++){
+
+        if (!sensors_registration[i].fetch_add(0)){
+            std::vector<Measure> values = historical_data[i];
+            values.emplace_back(timestamp, sensor_values[i]);
+        }
+    }
+}
+
 [[noreturn]] void StratixMonitor::read_fpga_counters() {
     while (true) {
         std::this_thread::sleep_for(std::chrono::milliseconds(time_period));
-        auto instant_power = get_current_power_counters();
+
+        auto timestamp = std::chrono::high_resolution_clock::now();
+        auto values = getAllSensorValues();
+
+        auto instant_power = get_current_power_values(values, timestamp);
         update_power_and_energy_with_last_measure(instant_power);
+
+        update_historical_data(values, timestamp);
     }
 }
 
@@ -93,30 +134,48 @@ float StratixMonitor::get_counter_state_from_sensor(int32_t sensor_id) {
     return measure;
 }
 
-float StratixMonitor::get_power_from_voltage_and_current_sensors(int32_t sensor_voltage, int32_t sensor_current) {
-    float voltage = get_counter_state_from_sensor(sensor_voltage);
-    float current = get_counter_state_from_sensor(sensor_current);
-    BwMctpPldm_getNumericSensorReadingById(mctpPldmHandle, &current, sensor_current);
-
+float StratixMonitor::get_power_from_voltage_and_current_values(float voltage, float current) {
     return voltage * current;
 }
 
-FPGAPowerCounterState StratixMonitor::get_current_power_counters() {
-    auto timestamp = std::chrono::high_resolution_clock::now();
+FPGAPowerCounterState StratixMonitor::get_current_power_values(std::vector<float> values,
+                                                               std::chrono::time_point<std::chrono::high_resolution_clock> timestamp) {
 
     return FPGAPowerCounterState(
-            get_counter_state_from_sensor(SensorId::total_power),
-            get_power_from_voltage_and_current_sensors(SensorId::pci_e_voltage, SensorId::pci_e_current),
-            get_power_from_voltage_and_current_sensors(SensorId::ext_1_voltage, SensorId::ext_1_current),
-            get_power_from_voltage_and_current_sensors(SensorId::ext_2_voltage, SensorId::ext_2_current),
-            get_power_from_voltage_and_current_sensors(SensorId::v3_3_voltage, SensorId::v3_3_current),
-            get_power_from_voltage_and_current_sensors(SensorId::core_voltage, SensorId::core_current),
-            get_power_from_voltage_and_current_sensors(SensorId::eram_voltage, SensorId::eram_current),
-            get_power_from_voltage_and_current_sensors(SensorId::vccr_voltage, SensorId::vccr_current),
-            get_power_from_voltage_and_current_sensors(SensorId::v1_8_voltage, SensorId::v1_8_current),
-            get_power_from_voltage_and_current_sensors(SensorId::v1_8a_voltage, SensorId::v1_8a_current),
-            get_power_from_voltage_and_current_sensors(SensorId::v2_5_voltage, SensorId::v2_5_current),
-            get_power_from_voltage_and_current_sensors(SensorId::v1_2_voltage, SensorId::v1_2_current),
-            get_power_from_voltage_and_current_sensors(SensorId::uib_voltage, SensorId::uib_current),
+            values[SensorId::total_power],
+            get_power_from_voltage_and_current_values(values[SensorId::pci_e_voltage], values[SensorId::pci_e_current]),
+            get_power_from_voltage_and_current_values(values[SensorId::ext_1_voltage], values[SensorId::ext_1_current]),
+            get_power_from_voltage_and_current_values(values[SensorId::ext_2_voltage], values[SensorId::ext_2_current]),
+            get_power_from_voltage_and_current_values(values[SensorId::v3_3_voltage], values[SensorId::v3_3_current]),
+            get_power_from_voltage_and_current_values(values[SensorId::core_voltage], values[SensorId::core_current]),
+            get_power_from_voltage_and_current_values(values[SensorId::eram_voltage], values[SensorId::eram_current]),
+            get_power_from_voltage_and_current_values(values[SensorId::vccr_voltage], values[SensorId::vccr_current]),
+            get_power_from_voltage_and_current_values(values[SensorId::v1_8_voltage], values[SensorId::v1_8_current]),
+            get_power_from_voltage_and_current_values(values[SensorId::v1_8a_voltage], values[SensorId::v1_8a_current]),
+            get_power_from_voltage_and_current_values(values[SensorId::v2_5_voltage], values[SensorId::v2_5_current]),
+            get_power_from_voltage_and_current_values(values[SensorId::v1_2_voltage], values[SensorId::v1_2_current]),
+            get_power_from_voltage_and_current_values(values[SensorId::uib_voltage], values[SensorId::uib_current]),
             timestamp);
+}
+
+
+void StratixMonitor::registerValuesForSensor(SensorID sensor){
+    sensors_registration[sensor]++;
+}
+
+void StratixMonitor::unregisterValuesForSensor(SensorID sensor){
+    sensors_registration[sensor]--;
+}
+
+std::vector<Measure> StratixMonitor::getHistoricalData(SensorID sensor, std::chrono::time_point<std::chrono::high_resolution_clock> start,
+                                                       std::chrono::time_point<std::chrono::high_resolution_clock> end){
+    std::vector<Measure> res;
+    auto data = historical_data[sensor];
+
+    for (auto it : data){
+        if ((it.first > start) && (it.first < end)) {
+            res.push_back(it);
+        }
+    }
+    return res;
 }
