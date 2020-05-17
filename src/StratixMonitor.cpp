@@ -48,8 +48,9 @@ StratixMonitor::StratixMonitor(int32_t period) {
 
     auto timestamp = std::chrono::high_resolution_clock::now();
     auto values = getAllSensorValues();
-    power_state = get_current_power_values(values, timestamp);
+    update_historical_data(values, timestamp);
 
+    power_state = get_current_power_values(values, timestamp);
     energy_state = FPGAEnergyCounterState();
     monitor_thread = std::thread(&StratixMonitor::read_fpga_counters, this);
 }
@@ -104,8 +105,9 @@ void StratixMonitor::update_historical_data(const std::vector<float> &sensor_val
 
     for(int32_t i = 1; i < sensors_registration.size(); i++){
 
-        if (!sensors_registration[i].fetch_add(0)){
-            std::vector<Measure> values = historical_data[i];
+        if (sensors_registration[i].fetch_add(0)){
+            std::cout << "Updating sensor: " << i << std::endl;
+            auto values = historical_data[i];
             values.emplace_back(timestamp, sensor_values[i]);
         }
     }
@@ -117,11 +119,10 @@ void StratixMonitor::update_historical_data(const std::vector<float> &sensor_val
 
         auto timestamp = std::chrono::high_resolution_clock::now();
         auto values = getAllSensorValues();
+        update_historical_data(values, timestamp);
 
         auto instant_power = get_current_power_values(values, timestamp);
         update_power_and_energy_with_last_measure(instant_power);
-
-        update_historical_data(values, timestamp);
     }
 }
 

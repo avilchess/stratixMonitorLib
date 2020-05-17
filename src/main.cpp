@@ -33,6 +33,7 @@ int main(int argc, char *argv[]) {
     stratixMonitor->unregisterValuesForSensor(SensorId::total_power);
 
     auto historic = stratixMonitor->getHistoricalData(SensorId::total_power, timestamp1, timestamp2);
+    std::cout << "Historical data [Total_power]: " << std::endl;
     for (auto it : historic){
         std::cout << it.first.time_since_epoch().count() << ": " << it.second << std::endl;
     }
