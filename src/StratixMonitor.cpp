@@ -31,6 +31,8 @@ int8_t bmcUsbReadFunction(uint8_t *buffer, uint16_t *length) {
 
 StratixMonitor *StratixMonitor::instance = nullptr;
 
+std::mutex StratixMonitor::my_mutex;
+
 void StratixMonitor::initialize_sensors_registration() {
     if (sensors_registration.empty()){
         sensors_registration = std::vector<std::atomic<int32_t>>(SensorId::sensor_number);
