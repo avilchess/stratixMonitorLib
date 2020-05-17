@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <mutex>
-
+#include <atomic>
 #include "StratixMonitor.h"
 #include "FPGACounters.h"
 #include "SensorIds.h"
@@ -35,7 +35,7 @@ void StratixMonitor::initialize_sensors_registration() {
     if (sensors_registration.empty()){
         sensors_registration.reserve(SensorId::sensor_number);
         for (int i = 0; i < SensorId::sensor_number; i++){
-            sensors_registration.emplace_back(0);
+            sensors_registration.at(i) = 0 ;
         }
     }
 }
