@@ -54,9 +54,10 @@ StratixMonitor::StratixMonitor(int32_t period) {
     initialize_sublibraries();
     initialize_sensors_registration();
     initialize_historical_data();
+    control_thread = 1;
 
     auto timestamp = std::chrono::high_resolution_clock::now();
-    auto values = getAllSensorValues();
+    auto values = get_all_sensor_values();
     update_historical_data(values, timestamp);
 
     power_state = get_current_power_values(values, timestamp);
@@ -67,9 +68,9 @@ StratixMonitor::StratixMonitor(int32_t period) {
 StratixMonitor* StratixMonitor::getInstance(int32_t period) {
     if (instance) return instance;                              // no lock here
 
-    //my_mutex.lock();
+    StratixMonitor::my_mutex.lock();
     if (!instance) instance = new StratixMonitor(period);
-    //my_mutex.unlock();
+    StratixMonitor::my_mutex.unlock();
 
     return instance;
 }
@@ -99,7 +100,7 @@ void StratixMonitor::update_power_and_energy_with_last_measure(FPGAPowerCounterS
 }
 
 
-std::vector<float> StratixMonitor::getAllSensorValues(){
+std::vector<float> StratixMonitor::get_all_sensor_values(){
     std::vector<float> data(SensorId::sensor_number, 0.0);
 
     for ( int32_t i = 1; i < SensorId::sensor_number; i++){
@@ -121,11 +122,11 @@ void StratixMonitor::update_historical_data(const std::vector<float> &sensor_val
 }
 
 [[noreturn]] void StratixMonitor::read_fpga_counters() {
-    while (true) {
+    while (control_thread.fetch_add(0)) {
         std::this_thread::sleep_for(std::chrono::milliseconds(time_period));
 
         auto timestamp = std::chrono::high_resolution_clock::now();
-        auto values = getAllSensorValues();
+        auto values = get_all_sensor_values();
         update_historical_data(values, timestamp);
 
         auto instant_power = get_current_power_values(values, timestamp);
@@ -168,17 +169,17 @@ FPGAPowerCounterState StratixMonitor::get_current_power_values(const std::vector
 }
 
 
-void StratixMonitor::registerValuesForSensor(SensorID sensor){
+void StratixMonitor::register_values_for_sensor(SensorID sensor){
     sensors_registration[sensor]++;
 }
 
-void StratixMonitor::unregisterValuesForSensor(SensorID sensor){
+void StratixMonitor::unregister_values_for_sensor(SensorID sensor){
     sensors_registration[sensor]--;
 }
 
-std::vector<Measure> StratixMonitor::getHistoricalData(SensorID sensor,
-        std::chrono::time_point<std::chrono::high_resolution_clock> start,
-        std::chrono::time_point<std::chrono::high_resolution_clock> end){
+std::vector<Measure> StratixMonitor::get_historical_data(SensorID sensor,
+                                                         std::chrono::time_point<std::chrono::high_resolution_clock> start,
+                                                         std::chrono::time_point<std::chrono::high_resolution_clock> end){
 
     std::vector<Measure> res;
     auto data = historical_data[sensor];
@@ -189,4 +190,9 @@ std::vector<Measure> StratixMonitor::getHistoricalData(SensorID sensor,
         }
     }
     return res;
+}
+
+StratixMonitor::~StratixMonitor() {
+    // This will kill the monitor_thread
+    control_thread = 0;
 }

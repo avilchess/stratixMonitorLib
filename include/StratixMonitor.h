@@ -23,8 +23,9 @@ private:
     int32_t time_period;                                                           // in milliseconds
     FPGAPowerCounterState power_state;
     FPGAEnergyCounterState energy_state;
-    std::mutex my_mutex;
+    static std::mutex my_mutex;
     std::thread monitor_thread;
+    std::atomic<int32_t> control_thread;
     std::vector<std::atomic<int32_t>> sensors_registration;
     std::map<SensorID, std::vector<Measure>> historical_data;
 
@@ -49,21 +50,24 @@ private:
 
     void initialize_historical_data();
 
-    static std::vector<float> getAllSensorValues();
+    static std::vector<float> get_all_sensor_values();
 
 public:
     static StratixMonitor *getInstance(int32_t period = 10);   // the only way to get access
+
+    ~StratixMonitor();
 
     FPGAEnergyCounterState get_energy_counters();
 
     static float get_counter_state_from_sensor(SensorID sensor_id);
 
-    void registerValuesForSensor(SensorID sensor);
+    void register_values_for_sensor(SensorID sensor);
 
-    void unregisterValuesForSensor(SensorID sensor);
+    void unregister_values_for_sensor(SensorID sensor);
 
-    std::vector<Measure> getHistoricalData(SensorID sensor, std::chrono::time_point<std::chrono::high_resolution_clock> start,
-                                           std::chrono::time_point<std::chrono::high_resolution_clock> end);
+    std::vector<Measure> get_historical_data(SensorID sensor,
+            std::chrono::time_point<std::chrono::high_resolution_clock> start,
+            std::chrono::time_point<std::chrono::high_resolution_clock> end);
 
 };
 
