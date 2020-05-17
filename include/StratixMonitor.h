@@ -31,30 +31,30 @@ private:
     //Methods
     StratixMonitor(int32_t period);                             // forbidden to call directly because it is a singleton
 
-    void initialize_sublibraries();
+    static void initialize_sublibraries();
 
     [[noreturn]] void read_fpga_counters();
 
-    float get_power_from_voltage_and_current_values(float voltage, float current);
+    static float get_power_from_voltage_and_current_values(float voltage, float current);
 
     void update_power_and_energy_with_last_measure(FPGAPowerCounterState instant_power);
 
-    FPGAPowerCounterState get_current_power_values(std::vector<float> values,
+    static FPGAPowerCounterState get_current_power_values(const std::vector<float> &values,
                                                    std::chrono::time_point<std::chrono::high_resolution_clock> timestamp);
 
-    void update_historical_data(std::vector<float> values,
+    void update_historical_data(const std::vector<float> &values,
                                   std::chrono::time_point<std::chrono::high_resolution_clock> timestamp);
 
     void initialize_sensors_registration();
 
-    std::vector<float> getAllSensorValues();
+    static std::vector<float> getAllSensorValues();
 
 public:
     static StratixMonitor *getInstance(int32_t period = 10);   // the only way to get access
 
     FPGAEnergyCounterState get_energy_counters();
 
-    float get_counter_state_from_sensor(SensorID sensor_id);
+    static float get_counter_state_from_sensor(SensorID sensor_id);
 
     void registerValuesForSensor(SensorID sensor);
 

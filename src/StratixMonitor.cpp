@@ -33,10 +33,10 @@ StratixMonitor *StratixMonitor::instance = nullptr;
 
 void StratixMonitor::initialize_sensors_registration() {
     if (sensors_registration.empty()){
-        sensors_registration = std::vector<std::atomic<int32_t>>(SensorId::sensor_number,0);
-//        for (int i = 0; i < SensorId::sensor_number; i++){
-//            sensors_registration.at(i) = 0 ;
-//        }
+        sensors_registration = std::vector<std::atomic<int32_t>>(SensorId::sensor_number);
+        for (int i = 0; i < SensorId::sensor_number; i++){
+            sensors_registration.at(i) = 0 ;
+        }
     }
 }
 
@@ -90,15 +90,16 @@ void StratixMonitor::update_power_and_energy_with_last_measure(FPGAPowerCounterS
 
 
 std::vector<float> StratixMonitor::getAllSensorValues(){
-    std::vector<float> data;
-    data.reserve(SensorId::sensor_number);
+    std::vector<float> data(SensorId::sensor_number, 0.0);
 
     for ( int32_t i = 1; i < SensorId::sensor_number; i++){
         data[i] = get_counter_state_from_sensor(i);
     }
+
+    return data;
 }
 
-void StratixMonitor::update_historical_data(std::vector<float> sensor_values,
+void StratixMonitor::update_historical_data(const std::vector<float> &sensor_values,
                             std::chrono::time_point<std::chrono::high_resolution_clock> timestamp){
 
     for(int32_t i = 1; i < sensors_registration.size(); i++){
@@ -138,10 +139,10 @@ float StratixMonitor::get_power_from_voltage_and_current_values(float voltage, f
     return voltage * current;
 }
 
-FPGAPowerCounterState StratixMonitor::get_current_power_values(std::vector<float> values,
+FPGAPowerCounterState StratixMonitor::get_current_power_values(const std::vector<float> &values,
                                                                std::chrono::time_point<std::chrono::high_resolution_clock> timestamp) {
 
-    return FPGAPowerCounterState(
+    return {
             values[SensorId::total_power],
             get_power_from_voltage_and_current_values(values[SensorId::pci_e_voltage], values[SensorId::pci_e_current]),
             get_power_from_voltage_and_current_values(values[SensorId::ext_1_voltage], values[SensorId::ext_1_current]),
@@ -155,7 +156,7 @@ FPGAPowerCounterState StratixMonitor::get_current_power_values(std::vector<float
             get_power_from_voltage_and_current_values(values[SensorId::v2_5_voltage], values[SensorId::v2_5_current]),
             get_power_from_voltage_and_current_values(values[SensorId::v1_2_voltage], values[SensorId::v1_2_current]),
             get_power_from_voltage_and_current_values(values[SensorId::uib_voltage], values[SensorId::uib_current]),
-            timestamp);
+            timestamp};
 }
 
 
