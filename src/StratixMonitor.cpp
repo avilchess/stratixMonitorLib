@@ -115,9 +115,7 @@ void StratixMonitor::update_historical_data(const std::vector<float> &sensor_val
     for(int32_t i = 1; i < sensors_registration.size(); i++){
 
         if (sensors_registration[i].fetch_add(0)){
-            std::cout << "Updating sensor: " << i << std::endl;
             historical_data[i].emplace_back(timestamp, sensor_values[i]);
-            std::cout << "Size: " <<  historical_data[i].size() << std::endl;
         }
     }
 }
@@ -150,7 +148,7 @@ float StratixMonitor::get_power_from_voltage_and_current_values(float voltage, f
 }
 
 FPGAPowerCounterState StratixMonitor::get_current_power_values(const std::vector<float> &values,
-                                                               std::chrono::time_point<std::chrono::high_resolution_clock> timestamp) {
+        std::chrono::time_point<std::chrono::high_resolution_clock> timestamp) {
 
     return {
             values[SensorId::total_power],
@@ -178,12 +176,12 @@ void StratixMonitor::unregisterValuesForSensor(SensorID sensor){
     sensors_registration[sensor]--;
 }
 
-std::vector<Measure> StratixMonitor::getHistoricalData(SensorID sensor, std::chrono::time_point<std::chrono::high_resolution_clock> start,
-                                                       std::chrono::time_point<std::chrono::high_resolution_clock> end){
+std::vector<Measure> StratixMonitor::getHistoricalData(SensorID sensor,
+        std::chrono::time_point<std::chrono::high_resolution_clock> start,
+        std::chrono::time_point<std::chrono::high_resolution_clock> end){
+
     std::vector<Measure> res;
     auto data = historical_data[sensor];
-
-    std::cout << "Size historical_data: " << data.size() << std::endl;
 
     for (auto it : data){
         if ((it.first > start) && (it.first < end)) {
