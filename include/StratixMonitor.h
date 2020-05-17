@@ -20,13 +20,13 @@ class StratixMonitor {
 private:
     // Fields
     static StratixMonitor *instance;
-    static int32_t time_period;                                                           // in milliseconds
-    static FPGAPowerCounterState power_state;
-    static FPGAEnergyCounterState energy_state;
-    static std::mutex my_mutex;
-    static std::thread monitor_thread;
-    static std::vector<std::atomic<int32_t>> sensors_registration;
-    static std::map<SensorID, std::vector<Measure>> historical_data;
+    int32_t time_period;                                                           // in milliseconds
+    FPGAPowerCounterState power_state;
+    FPGAEnergyCounterState energy_state;
+    std::mutex my_mutex;
+    std::thread monitor_thread;
+    std::vector<std::atomic<int32_t>> sensors_registration;
+    std::map<SensorID, std::vector<Measure>> historical_data;
 
     //Methods
     StratixMonitor(int32_t period);                             // forbidden to call directly because it is a singleton
