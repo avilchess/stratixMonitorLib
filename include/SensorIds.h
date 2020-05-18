@@ -8,6 +8,7 @@
 using SensorID = int32_t;
 
 namespace SensorId {
+
     constexpr int32_t sensor_number = 43;      // Sensor number + 1, to use the sensorIds directly.
 
     constexpr SensorID total_power = 1;

@@ -2,7 +2,6 @@
 // Created by Antonio Vilches on 09/05/2020.
 //
 
-#include <cstdlib>
 #include <iostream>
 #include <chrono>
 

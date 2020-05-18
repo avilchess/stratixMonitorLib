@@ -79,7 +79,7 @@ FPGAEnergyCounterState FPGAEnergyCounterState::operator-(FPGAEnergyCounterState 
  * This method returns the counter states for a given measurement of FPGA counters.
  * @return
  */
-std::vector<float> FPGAEnergyCounterState::getCountersState() {
+std::vector<float> FPGAEnergyCounterState::getCountersState() const {
     std::vector<float> res;
     res.push_back(total_board);
     res.push_back(pci_e);
@@ -144,7 +144,7 @@ FPGAEnergyCounterState FPGAPowerCounterState::integrate_energy_from_timestamp(
 }
 
 FPGAEnergyCounterState FPGAPowerCounterState::operator*(float time) {
-    return FPGAEnergyCounterState(this->total_board * time,
+    return {this->total_board * time,
                               this->pci_e * time,
                               this->ext_1 * time,
                               this->ext_2 * time,
@@ -157,5 +157,5 @@ FPGAEnergyCounterState FPGAPowerCounterState::operator*(float time) {
                               this->v2_5 * time,
                               this->v1_2 * time,
                               this->uib * time
-    );
+    };
 }

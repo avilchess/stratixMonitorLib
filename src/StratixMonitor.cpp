@@ -34,17 +34,17 @@ StratixMonitor *StratixMonitor::instance = nullptr;
 std::mutex StratixMonitor::my_mutex;
 
 void StratixMonitor::initialize_sensors_registration() {
-    if (sensors_registration.empty()){
+    if (sensors_registration.empty()) {
         sensors_registration = std::vector<std::atomic<int32_t>>(SensorId::sensor_number);
-        for (int i = 0; i < SensorId::sensor_number; i++){
-            sensors_registration.at(i) = 0 ;
+        for (int i = 0; i < SensorId::sensor_number; i++) {
+            sensors_registration.at(i) = 0;
         }
     }
 }
 
-void StratixMonitor::initialize_historical_data(){
-    if(historical_data.empty()){
-        for (int32_t i = 0; i < SensorId::sensor_number; i++){
+void StratixMonitor::initialize_historical_data() {
+    if (historical_data.empty()) {
+        for (int32_t i = 0; i < SensorId::sensor_number; i++) {
             std::vector<Measure> measures;
             historical_data.insert({i, measures});
         }
@@ -67,7 +67,7 @@ StratixMonitor::StratixMonitor(int32_t period) {
     monitor_thread = std::thread(&StratixMonitor::read_fpga_counters, this);
 }
 
-StratixMonitor* StratixMonitor::getInstance(int32_t period) {
+StratixMonitor *StratixMonitor::getInstance(int32_t period) {
     if (instance) return instance;                              // no lock here
 
     my_mutex.lock();
@@ -102,10 +102,10 @@ void StratixMonitor::update_power_and_energy_with_last_measure(FPGAPowerCounterS
 }
 
 
-std::vector<float> StratixMonitor::get_all_sensor_values(){
+std::vector<float> StratixMonitor::get_all_sensor_values() {
     std::vector<float> data(SensorId::sensor_number, 0.0);
 
-    for ( int32_t i = 1; i < SensorId::sensor_number; i++){
+    for (int32_t i = 1; i < SensorId::sensor_number; i++) {
         data[i] = get_counter_state_from_sensor(i);
     }
 
@@ -113,11 +113,11 @@ std::vector<float> StratixMonitor::get_all_sensor_values(){
 }
 
 void StratixMonitor::update_historical_data(const std::vector<float> &sensor_values,
-                            std::chrono::time_point<std::chrono::high_resolution_clock> timestamp){
+                                            std::chrono::time_point<std::chrono::high_resolution_clock> timestamp) {
 
-    for(int32_t i = 1; i < sensors_registration.size(); i++){
+    for (int32_t i = 1; i < sensors_registration.size(); i++) {
 
-        if (sensors_registration[i].fetch_add(0)){
+        if (sensors_registration[i].fetch_add(0)) {
             historical_data[i].emplace_back(timestamp, sensor_values[i]);
         }
     }
@@ -151,7 +151,7 @@ float StratixMonitor::get_power_from_voltage_and_current_values(float voltage, f
 }
 
 FPGAPowerCounterState StratixMonitor::get_current_power_values(const std::vector<float> &values,
-        std::chrono::time_point<std::chrono::high_resolution_clock> timestamp) {
+                                                               std::chrono::time_point<std::chrono::high_resolution_clock> timestamp) {
 
     return {
             values[SensorId::total_power],
@@ -171,22 +171,22 @@ FPGAPowerCounterState StratixMonitor::get_current_power_values(const std::vector
 }
 
 
-void StratixMonitor::register_values_for_sensor(SensorID sensor){
+void StratixMonitor::register_values_for_sensor(SensorID sensor) {
     sensors_registration[sensor]++;
 }
 
-void StratixMonitor::unregister_values_for_sensor(SensorID sensor){
+void StratixMonitor::unregister_values_for_sensor(SensorID sensor) {
     sensors_registration[sensor]--;
 }
 
-std::vector<Measure> StratixMonitor::get_historical_data(SensorID sensor,
-                                                         std::chrono::time_point<std::chrono::high_resolution_clock> start,
-                                                         std::chrono::time_point<std::chrono::high_resolution_clock> end){
+std::vector<Measure>
+StratixMonitor::get_historical_data(SensorID sensor, std::chrono::time_point<std::chrono::high_resolution_clock> start,
+                                    std::chrono::time_point<std::chrono::high_resolution_clock> end) {
 
     std::vector<Measure> res;
     auto data = historical_data[sensor];
 
-    for (auto it : data){
+    for (auto it : data) {
         if ((it.first > start) && (it.first < end)) {
             res.push_back(it);
         }

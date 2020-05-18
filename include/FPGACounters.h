@@ -9,6 +9,7 @@
 #include <chrono>
 
 namespace FPGAEnergyCounter {
+
     constexpr int32_t total_board_energy = 0;
     constexpr int32_t pci_e_energy = 1;
     constexpr int32_t ext_1_energy = 2;
@@ -51,7 +52,7 @@ public:
 
     FPGAEnergyCounterState operator-(FPGAEnergyCounterState const &obj);
 
-    std::vector<float> getCountersState();
+    std::vector<float> getCountersState() const;
 };
 
 class FPGAPowerCounterState {
@@ -85,7 +86,6 @@ public:
 
     FPGAEnergyCounterState
     integrate_energy_from_timestamp(std::chrono::time_point<std::chrono::high_resolution_clock> timestamp_last_measure);
-
 };
 
 #endif //STRATIXMONITORLIB_FPGACOUNTERS_H
