@@ -10,11 +10,11 @@ set(PRJ_SRC "${PROJECT_SOURCE_DIR}/src")
 set(PRJ_INC "${PROJECT_SOURCE_DIR}/include")
 
 if(BW_BMC_USB_LIB)
-    set(BW_BMC_USB_LIB "/usr/share/bittware/520nmx/cots/bw_bmc_usb_lib/")
+    set(BW_BMC_USB_LIB "/usr/share/bittware/520nmx/cots/bw_bmc_usb_lib")
 endif()
 
 if(BW_MCTP_PLDM_LIB)
-    set(BW_MCTP_PLDM_LIB "/usr/share/bittware/520nmx/cots/bw_mctp_pldm_lib/")
+    set(BW_MCTP_PLDM_LIB "/usr/share/bittware/520nmx/cots/bw_mctp_pldm_lib")
 endif()
 
 set(STRATIX_MONITOR_CORE_SOURCES ${PROJECT_SOURCE_DIR}/src/FPGACounters.cpp
