@@ -22,8 +22,9 @@ set(STRATIX_MONITOR_CORE_SOURCES ${PROJECT_SOURCE_DIR}/src/FPGACounters.cpp
 set(STRATIX_MONITOR_CORE_HEADERS ${PROJECT_SOURCE_DIR}/include/FPGACounters.h
         ${PRJ_INC}/StratixMonitor.h
         ${PRJ_INC}/SensorIds.h
-        ${BW_BMC_USB_LIB}/bw_bmc_usb_lib.h
-        ${BW_MCTP_PLDM_LIB}/bw_mctp_pldm_lib.h)
+        #${BW_BMC_USB_LIB}/bw_bmc_usb_lib.h
+        #${BW_MCTP_PLDM_LIB}/bw_mctp_pldm_lib.h
+        )
 
 add_library(stratixMonitor "")
 target_sources(stratixMonitor PRIVATE ${STRATIX_MONITOR_CORE_SOURCES} PUBLIC ${STRATIX_MONITOR_CORE_HEADERS})
